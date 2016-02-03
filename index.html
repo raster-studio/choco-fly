@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+  <head>    
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=1024">
+    <link media="all" href="css/normalize.css" type="text/css" rel="stylesheet" />
+    <link media="all" href="css/style.css?v1.0.2" type="text/css" rel="stylesheet" />
+    <title>Choco Fly</title>
+  </head>
+  <body>
+    <div id="viewport">
+      <div id="loading"></div>
+      <div id="sound"></div>
+      <progress value="0" max="100">Loading</progress>
+      
+      <div id="screen-start" class="screen">        
+
+      </div>
+      
+      <div id="screen-choose" class="screen">
+
+      </div>
+      
+      <div id="screen-game" class="screen">
+        <canvas id="game-stage"></canvas>
+      </div>
+      <div id="screen-highscore" class="screen">
+        
+      </div>
+    </div>
+    
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.2/jquery-ui.min.js"></script>
+    <script type="text/javascript" src="js/gsap/TweenMax.min.js"></script>
+    <script type="text/javascript" src="js/game_engine.js"></script>
+    <script type="text/javascript" src="js/choco.js?v1.0.6"></script>
+    
+  </body>
+</html>
