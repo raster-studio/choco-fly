@@ -76,3 +76,36 @@ progress{
   background: url('../images/intro_background.png') 50% 50% no-repeat;
   background-size: contain;
 }
+
+#hazisweets{
+  background: url('../images/intro.png') -322px 0px no-repeat;
+  width: 804px;
+  height: 311px;
+  position: absolute;
+  left: 0;
+  right: 0;
+  margin: auto;
+  top: 20px;
+}
+
+#choco{
+  background: url('../images/intro.png') 0px -311px no-repeat;
+  width: 750px;
+  height: 369px;
+  position: absolute;
+  left: 0;
+  right: 0;
+  margin: auto;
+  bottom: 20px;
+}
+
+#tucan{
+  background: url('../images/intro.png') 0px 0px no-repeat;
+  width: 335px;
+  height: 230px;
+  position: absolute;
+  left: 0;
+  right: 0;
+  margin: auto;
+  bottom: 20px;
+}
