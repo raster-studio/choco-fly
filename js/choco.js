@@ -7,7 +7,7 @@
 
 var Choco = Choco || {};
 
-Choco.screen='start';
+Choco.screen='intro';
 
 Choco.pausing=0;
 Choco.gameSpeed=4;
@@ -29,7 +29,7 @@ Choco.touchRight=false;
 
 Choco.skipReady=false;
 Choco.skipIntro=false;
-Choco.debug=false;
+Choco.debug=true;
 Choco.immortal=false;
 Choco.startingLevel=1;
 
@@ -44,7 +44,11 @@ Choco.loader=null;
 Choco.game = null;
 
 Choco.imageResources=[  
-
+  "images/backgrounds.png","images/clouds.png","images/grass_day.png","images/grass_night.png","images/highscore.png",
+  "images/intro.png","images/intro_background.png","images/logos.png","images/Museo900.png","images/pickups.png",
+  "images/planes.png","images/terrain.png","images/Toonish1.png","images/Toonish2.png","images/Toonish3.png",
+  "images/Toonish4.png","images/totem.png","images/toucanFrames.png","images/trees.png","images/tutorial.png",
+  "images/uielements.png"
   ]
 ;
 
@@ -171,7 +175,7 @@ Choco.clearSwitchScreenTimer = function(){
  */
 Choco.log = function(message){
   if (Choco.debug){
-    console.log('RASTER: '+message);
+    console.log('CHOCO: '+message);
   }
 };
 
@@ -250,7 +254,7 @@ Choco.generateLandscape = function(){
  * @param {Array} items
  */
 Choco.createRandomObject = function(pos, type, container){
-  var items=Raster[type+'s'];
+  var items=Choco[type+'s'];
   var index=Kemist.getRandomInt(1,Object.keys(items).length);
   var item=items[index];
   
@@ -261,9 +265,9 @@ Choco.createRandomObject = function(pos, type, container){
   );
   
   if (typeof container === 'undefined'){
-    Raster[type+'_objects'].push(obj);
+    Choco[type+'_objects'].push(obj);
   }else{
-    Raster[container].push(obj);
+    Choco[container].push(obj);
   }  
 };
 
