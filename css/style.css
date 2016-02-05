@@ -64,8 +64,7 @@ body{
 progress{
   position: absolute;
   left: 0;
-  top: 0;
-  bottom: 0;
+  bottom: 5%;
   right: 0;
   margin: auto;
   display: block;
@@ -75,6 +74,10 @@ progress{
 #screen-intro{
   background: url('../images/intro_background.png') 50% 50% no-repeat;
   background-size: contain;
+}
+
+#screen-intro > div{
+  visibility: hidden;
 }
 
 #hazisweets{
@@ -107,5 +110,5 @@ progress{
   left: 0;
   right: 0;
   margin: auto;
-  bottom: 20px;
+  top: 204px;
 }

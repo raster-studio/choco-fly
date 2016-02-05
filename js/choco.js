@@ -75,6 +75,14 @@ Choco.handleScreen = function(){
   Choco.screenHandlerCalled=true;
   
   switch (Choco.screen){
+    case 'intro':
+      var tl1  = new TimelineMax({repeat:0});
+      tl1.add( TweenLite.from('#screen-intro #hazisweets', 0.75, {autoAlpha: 0, scale:0, ease:"Expo.easeInOut"}),'intro' );
+      tl1.add( TweenLite.from('#screen-intro #choco', 0.75, {autoAlpha: 0, scale:0, ease:"Expo.easeInOut"}) );
+      tl1.add( TweenLite.from('#screen-intro #tucan', 0.75, {autoAlpha: 0, ease:"Expo.easeInOut"}) );
+      setTimeout(function(){
+        Choco.switchScreen('start');
+      },5000);
     case 'start':
 
       if (Choco.switchScreenTimer==null){
