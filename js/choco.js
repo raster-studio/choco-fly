@@ -44,11 +44,11 @@ Choco.loader=null;
 Choco.game = null;
 
 Choco.imageResources=[  
-  "images/backgrounds.png","images/clouds.png","images/grass_day.png","images/grass_night.png","images/highscore.png",
+  "images/bg_day.png","images/clouds.png","images/grass_day.png","images/grass_night.png","images/highscore.png",
   "images/intro.png","images/intro_background.png","images/logos.png","images/Museo900.png","images/pickups.png",
   "images/planes.png","images/terrain.png","images/Toonish1.png","images/Toonish2.png","images/Toonish3.png",
   "images/Toonish4.png","images/totem.png","images/toucanFrames.png","images/trees.png","images/tutorial.png",
-  "images/uielements.png"
+  "images/uielements.png","images/bg_night.png"
   ]
 ;
 
@@ -506,6 +506,7 @@ Choco.renderGame = function() {
  * Gets high scores
  */
 Choco.getHighScores = function(callback){
+  return;
     $.ajax({
       type: 'GET',
       url: 'http://rasterstudio.hu/api/xmas_scores',
