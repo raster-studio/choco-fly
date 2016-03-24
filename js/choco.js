@@ -85,8 +85,12 @@ Choco.handleScreen = function(){
       },5000);
     case 'start':
 
+      var tl2  = new TimelineMax({repeat:0});
+      tl2.add( TweenLite.from('#screen-start #start_hazisweets', 0.75, {autoAlpha: 0, scale:0, ease:"Expo.easeInOut"}),'start' );
+      tl2.add( TweenLite.from('#screen-start #start_logo', 0.75, {autoAlpha: 0, scale:0, ease:"Expo.easeInOut"}) );
+//      tl2.add( TweenLite.from('#screen-intro #tucan', 0.75, {autoAlpha: 0, ease:"Expo.easeInOut"}) );
       if (Choco.switchScreenTimer==null){
-        Choco.switchScreenTimer = setTimeout(Choco.initSwitchScreenTimer,10000);
+//        Choco.switchScreenTimer = setTimeout(Choco.initSwitchScreenTimer,10000);
       }
       break;
       

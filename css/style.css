@@ -192,11 +192,44 @@ progress{
   width: 496px;
   height: 80px;
   top: 400px;
-  left: 500px;
+  left: 800px;
+}
+
+#start_hazisweets{
+  width: 200px;
+  height: 76px;
+  background: url('../images/start_hazisweets.png') 0% 0% no-repeat;
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 20px;
+  margin: auto;
+}
+
+#start_logo{
+  width: 566px;
+  height: 315px;
+  background: url('../images/logos.png') 0% 0% no-repeat;
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 60px;
+  margin: auto;
+}
+
+#start_button{
+  width: 676px;
+  height: 197px;
+  background: url('../images/uielements.png') 0% -410px no-repeat;
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 384px;
+  margin: auto;
 }
 
 @keyframes cloud
 {
-    from {transform: translateX(500px);}
-    to {transform: translateX(-1000px);}
+    from {transform: translateX(1200px);}
+    to {transform: translateX(-1200px);}
 }
