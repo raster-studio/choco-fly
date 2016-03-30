@@ -226,10 +226,26 @@ progress{
   right: 0;
   top: 384px;
   margin: auto;
+  animation: pulse 0.7s linear infinite;
+  cursor: pointer;
 }
 
 @keyframes cloud
 {
     from {transform: translateX(1200px);}
     to {transform: translateX(-1200px);}
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(1, 1);
+  }
+
+  50% {
+    transform: scale(0.95, 0.95);
+  }
+
+  100% {
+    transform: scale(1, 1);
+  }
 }

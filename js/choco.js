@@ -84,13 +84,13 @@ Choco.handleScreen = function(){
         Choco.switchScreen('start');
       },5000);
     case 'start':
-
+      TweenLite.set([$("#start_hazisweets, #start_logo, #start_button")], {display:'none'});
       var tl2  = new TimelineMax({repeat:0});
-      tl2.add( TweenLite.from('#screen-start #start_hazisweets', 0.75, {autoAlpha: 0, scale:0, ease:"Expo.easeInOut"}),'start' );
-      tl2.add( TweenLite.from('#screen-start #start_logo', 0.75, {autoAlpha: 0, scale:0, ease:"Expo.easeInOut"}) );
-//      tl2.add( TweenLite.from('#screen-intro #tucan', 0.75, {autoAlpha: 0, ease:"Expo.easeInOut"}) );
+      tl2.add( TweenLite.fromTo('#screen-start #start_hazisweets', 0.75, {display: 'none',autoAlpha: 0, scale:0},{display: 'block',autoAlpha: 1, scale:1, ease:"Expo.easeInOut"}),'start' );
+      tl2.add( TweenLite.fromTo('#screen-start #start_logo', 0.75, {display: 'none',autoAlpha: 0, scale:0},{display: 'block',autoAlpha: 1, scale:1, ease:"Expo.easeInOut"}) );
+      tl2.add( TweenLite.fromTo('#screen-start #start_button', 0.75, {display: 'none',autoAlpha: 0, scale:0},{display: 'block',autoAlpha: 1, scale:1, ease:"Expo.easeInOut"}) );
       if (Choco.switchScreenTimer==null){
-//        Choco.switchScreenTimer = setTimeout(Choco.initSwitchScreenTimer,10000);
+        Choco.switchScreenTimer = setTimeout(Choco.initSwitchScreenTimer,10000);
       }
       break;
       
