@@ -7,7 +7,7 @@
 
 var Choco = Choco || {};
 
-Choco.screen='start';
+Choco.screen='intro';
 
 Choco.pausing=0;
 Choco.gameSpeed=4;
@@ -78,19 +78,19 @@ Choco.handleScreen = function(){
     case 'intro':
       var tl1  = new TimelineMax({repeat:0});
       tl1.add( TweenLite.from('#screen-intro #hazisweets', 0.75, {autoAlpha: 0, scale:0, ease:"Expo.easeInOut"}),'intro' );
-      tl1.add( TweenLite.from('#screen-intro #choco', 0.75, {autoAlpha: 0, scale:0, ease:"Expo.easeInOut"}) );
-      tl1.add( TweenLite.from('#screen-intro #tucan', 0.75, {autoAlpha: 0, ease:"Expo.easeInOut"}) );
+      tl1.add( TweenLite.from('#screen-intro #choco', 0.75, {autoAlpha: 0, scale:0, ease:"Expo.easeInOut"}),'intro+=0.5' );
+      tl1.add( TweenLite.from('#screen-intro #tucan', 0.75, {autoAlpha: 0, ease:"Expo.easeInOut"}),'intro+=1' );
       setTimeout(function(){
         Choco.switchScreen('start');
       },5000);
     case 'start':
-      TweenLite.set([$("#start_hazisweets, #start_logo, #start_button")], {display:'none'});
+      $('#screen-start .cloud-day, #screen-start .tree-day, #screen-start .mountain-day, #screen-start .ground-day').show();
       var tl2  = new TimelineMax({repeat:0});
-      tl2.add( TweenLite.fromTo('#screen-start #start_hazisweets', 0.75, {display: 'none',autoAlpha: 0, scale:0},{display: 'block',autoAlpha: 1, scale:1, ease:"Expo.easeInOut"}),'start' );
-      tl2.add( TweenLite.fromTo('#screen-start #start_logo', 0.75, {display: 'none',autoAlpha: 0, scale:0},{display: 'block',autoAlpha: 1, scale:1, ease:"Expo.easeInOut"}) );
-      tl2.add( TweenLite.fromTo('#screen-start #start_button', 0.75, {display: 'none',autoAlpha: 0, scale:0},{display: 'block',autoAlpha: 1, scale:1, ease:"Expo.easeInOut"}) );
+      tl2.add( TweenLite.fromTo('#screen-start #start_hazisweets', 0.75, {autoAlpha: 0, scale:0},{display: 'block',autoAlpha: 1, scale:1, ease:"Expo.easeInOut"}),'start' );
+      tl2.add( TweenLite.fromTo('#screen-start #start_logo', 0.75, {autoAlpha: 0, scale:0, rotation: '360'},{display: 'block',autoAlpha: 1, scale:1, ease:"Expo.easeInOut", rotation: 0}),'start+=0.3' );
+      tl2.add( TweenLite.fromTo('#screen-start #start_button', 0.75, {autoAlpha: 0, scale:0, rotation: '-360'},{display: 'block',autoAlpha: 1, scale:1, ease:"Expo.easeInOut", rotation: 0}),'start+=0.6' );
       if (Choco.switchScreenTimer==null){
-        Choco.switchScreenTimer = setTimeout(Choco.initSwitchScreenTimer,10000);
+        Choco.switchScreenTimer = setTimeout(Choco.initSwitchScreenTimer,20000);
       }
       break;
       
@@ -106,7 +106,7 @@ Choco.handleScreen = function(){
       
     case 'highscore':
       if (Choco.switchScreenTimer==null){
-        Choco.switchScreenTimer = setTimeout(Choco.initSwitchScreenTimer,10000);
+        Choco.switchScreenTimer = setTimeout(Choco.initSwitchScreenTimer,20000);
       }
       Choco.getHighScores(function(){
         Choco.drawHighScores();
@@ -128,6 +128,7 @@ Choco.switchScreen = function(screen){
   switch (screen){
     case 'start':
       $('#start_hazisweets, #start_logo, #start_button').hide();
+      $('#screen-start .cloud-day, #screen-start .tree-day, #screen-start .mountain-day, #screen-start .ground-day').show();
       break;
     case 'choose':
       $('#choose-logo, #choose-button, #screen-choose .character').hide();
@@ -167,7 +168,7 @@ Choco.initSwitchScreenTimer = function(){
       Choco.switchScreen('start');
     }
   }
-  Choco.switchScreenTimer = setTimeout(Choco.initSwitchScreenTimer,10000);
+  Choco.switchScreenTimer = setTimeout(Choco.initSwitchScreenTimer,20000);
 };
 
 
