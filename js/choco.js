@@ -7,7 +7,7 @@
 
 var Choco = Choco || {};
 
-Choco.screen='intro';
+Choco.screen='start';
 
 Choco.pausing=0;
 Choco.gameSpeed=4;
@@ -48,7 +48,7 @@ Choco.imageResources=[
   "images/intro.png","images/intro_background.png","images/logos.png","images/Museo900.png","images/pickups.png",
   "images/planes.png","images/terrain.png","images/Toonish1.png","images/Toonish2.png","images/Toonish3.png",
   "images/Toonish4.png","images/totem.png","images/toucanFrames.png","images/trees.png","images/tutorial.png",
-  "images/uielements.png","images/bg_night.png"
+  "images/uielements.png","images/bg_night.png","images/start_hazisweets.png"
   ]
 ;
 
@@ -127,7 +127,7 @@ Choco.switchScreen = function(screen){
   
   switch (screen){
     case 'start':
-      $('#screen-start .hill-back, #start-trees-left, #start-trees-right, #start-snowman, #start-raster, #start-logo, #start-button, #screen-start .falling-snow').hide();
+      $('#start_hazisweets, #start_logo, #start_button').hide();
       break;
     case 'choose':
       $('#choose-logo, #choose-button, #screen-choose .character').hide();

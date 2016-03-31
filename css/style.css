@@ -117,6 +117,10 @@ progress{
   background: url('../images/bg_day.png') 0% 0% repeat-x;
 }
 
+#screen-start div{
+  display: none;
+}
+
 .ground-day{
   position: absolute;
   background: url('../images/terrain.png') 0 0 no-repeat;
