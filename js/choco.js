@@ -514,7 +514,7 @@ Choco.getHighScores = function(callback){
   return;
     $.ajax({
       type: 'GET',
-      url: 'http://rasterstudio.hu/api/xmas_scores',
+      url: 'http://rasterstudio.hu/api/chocofly.get_highscores',
       data: '',
       dataType: 'json',
       cache: false,

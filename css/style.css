@@ -234,6 +234,12 @@ progress{
   cursor: pointer;
 }
 
+
+#screen-highscore{
+  background: url('../images/bg_day.png') 0% 0% repeat-x;
+}
+
+
 @keyframes cloud
 {
     from {transform: translateX(1200px);}
