@@ -239,6 +239,76 @@ progress{
   background: url('../images/bg_day.png') 0% 0% repeat-x;
 }
 
+#screen-highscore .highscore{
+  background: url('../images/highscore.png') 0 -430px no-repeat;
+  width: 554px;
+  height: 123px;  
+  position: absolute;
+}
+
+#screen-highscore #rank1{
+  background-position: 0 -551px;
+  left: 47px;
+  top: 125px;
+}
+
+#screen-highscore #rank2{
+  background-position: 0 -673px;
+  left: 47px;
+  top: 252px;  
+}
+
+#screen-highscore #rank3{
+  background-position: 0 -795px;
+  left: 47px;
+  top: 379px;
+}
+
+#screen-highscore #rank4{
+  left: 47px;
+  top: 506px;
+}
+
+#screen-highscore #rank5{
+  left: 691px;
+  top: 125px;
+}
+
+#screen-highscore #rank6{
+  left: 691px;
+  top: 252px;
+}
+
+#screen-highscore #rank7{
+  left: 691px;
+  top: 379px;
+}
+
+#screen-highscore #rank8{
+  left: 691px;
+  top: 506px;
+}
+
+#hs-separator{
+  background: url('../images/highscore.png') 0 0 no-repeat;
+  position: absolute;
+  width: 40px;
+  height: 430px;
+  left: 625px;
+  top: 178px;
+}
+
+#hs-choco{
+  background: url('../images/choco_hs.png') 0 0 no-repeat;
+  position: absolute;
+  width: 250px;
+  height: 137px;
+  left: 0;
+  right: 0;
+  margin: auto;
+  top: 10px;
+}
+
 
 @keyframes cloud
 {

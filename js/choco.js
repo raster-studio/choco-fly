@@ -7,7 +7,7 @@
 
 var Choco = Choco || {};
 
-Choco.screen = 'intro';
+Choco.screen = 'highscore';
 
 Choco.pausing = 0;
 Choco.gameSpeed = 4;
@@ -40,6 +40,7 @@ Choco.highScores = [];
 Choco.highScoreReached = false;
 Choco.switchScreenTimer = null;
 Choco.highScoreTimeLine = null;
+Choco.screenSwitcherDelay = 10000;
 Choco.loader = null;
 
 Choco.game = null;
@@ -90,7 +91,7 @@ Choco.handleScreen = function () {
       tl2.add(TweenLite.fromTo('#screen-start #start_logo', 0.75, {autoAlpha: 0, scale: 0, rotation: '360'}, {display: 'block', autoAlpha: 1, scale: 1, ease: "Expo.easeInOut", rotation: 0}), 'start+=0.3');
       tl2.add(TweenLite.fromTo('#screen-start #start_button', 0.75, {autoAlpha: 0, scale: 0, rotation: '-360'}, {display: 'block', autoAlpha: 1, scale: 1, ease: "Expo.easeInOut", rotation: 0}), 'start+=0.6');
       if (Choco.switchScreenTimer == null) {
-        Choco.switchScreenTimer = setTimeout(Choco.initSwitchScreenTimer, 20000);
+        Choco.switchScreenTimer = setTimeout(Choco.initSwitchScreenTimer, Choco.screenSwitcherDelay);
       }
       break;
 
@@ -106,7 +107,7 @@ Choco.handleScreen = function () {
 
     case 'highscore':
       if (Choco.switchScreenTimer == null) {
-        Choco.switchScreenTimer = setTimeout(Choco.initSwitchScreenTimer, 20000);
+        Choco.switchScreenTimer = setTimeout(Choco.initSwitchScreenTimer, Choco.screenSwitcherDelay);
       }
       Choco.getHighScores(function () {
         Choco.drawHighScores();
@@ -168,7 +169,7 @@ Choco.initSwitchScreenTimer = function () {
       Choco.switchScreen('start');
     }
   }
-  Choco.switchScreenTimer = setTimeout(Choco.initSwitchScreenTimer, 20000);
+  Choco.switchScreenTimer = setTimeout(Choco.initSwitchScreenTimer, Choco.screenSwitcherDelay);
 };
 
 
