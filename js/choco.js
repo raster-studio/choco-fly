@@ -509,16 +509,16 @@ Choco.renderGame = function () {
 /**
  * Creates API session
  */
-Choco.createSession = function () {
+Choco.createSession = function (callback) {
   var now = new Date();
   var year = now.getYear() + 1900;
   var month = now.getMonth() + 1;
   var day = now.getDate();
-  var timeStamp = year + '' + (month < 10 ? '0' + month : month) + '' + (day < 10 ? '0' + day : day);
-  var password = CryptoJS.MD5('ChOcOfLy' + timeStamp);
+  var timeStamp = year + '' + (month < 10 ? '0' + month : month) + '' + (day < 10 ? '0' + day : day); 
+  var password = CryptoJS.MD5('ChOcOfLy' + timeStamp.toString());
   $.ajax({
     type: 'GET',
-    url: 'http://rasterstudio.hu/api/chocofly.create_session/chocofly,' + escape(password),
+    url: 'http://rasterstudio.hu/api/chocofly.create_session/chocofly/' + escape(password),
     data: '',
     dataType: 'json',
     cache: false,
@@ -533,6 +533,9 @@ Choco.createSession = function () {
     success: function (data, textStatus, XMLHttpRequest) {
       if (data.result == 'ok') {
         Choco.sessionId = data.sessionId;
+        if (typeof callback === 'function'){
+          callback();
+        }        
       }
     }
 
@@ -544,10 +547,12 @@ Choco.createSession = function () {
  * Gets high scores
  */
 Choco.getHighScores = function (callback) {
-  return;
+  if (Choco.sessionId===null){
+    return;
+  }
   $.ajax({
     type: 'GET',
-    url: 'http://rasterstudio.hu/api/chocofly.get_highscores',
+    url: 'http://rasterstudio.hu/api/chocofly.get_highscores/'+escape(Choco.sessionId),
     data: '',
     dataType: 'json',
     cache: false,
@@ -613,6 +618,7 @@ Choco.storeHighScore = function (name) {
  * Draws highscore box
  */
 Choco.drawHighScores = function () {
+  return;
   var row;
   var rank = 1;
   var score = (Choco.game ? Choco.game.score : 0);
@@ -699,6 +705,7 @@ $(document).ready(function () {
   Kemist.Resources.onProgress(Choco.loadingProgress);
   Kemist.Resources.onReady(Choco.handleScreen);
   Kemist.Resources.load(Choco.imageResources);
+  Choco.createSession();
 
   $('#screen-' + Choco.screen).fadeIn(300, function () {
     $(this).addClass('active');
