@@ -577,18 +577,14 @@ Choco.getHighScores = function (callback) {
  * Store new high score
  */
 Choco.storeHighScore = function (name) {
-  var now = new Date();
-  var year = now.getYear() + 1900;
-  var month = now.getMonth() + 1;
-  var day = now.getDate();
-  var timeStamp = year + '' + (month < 10 ? '0' + month : month) + '' + (day < 10 ? '0' + day : day);
-  var raw_hash = CryptoJS.MD5(timeStamp + '|RaStErXmAs|' + Choco.game.level + '|' + Choco.game.score);
-  var hash = raw_hash.toString(CryptoJS.enc.Hex);
+  if (Choco.sessionId===null){
+    return;
+  }
 
   $.ajax({
     type: 'POST',
-    url: 'http://rasterstudio.hu/api/xmas_highscore',
-    data: 'hash=' + escape(hash) + '&name=' + name + '&score=' + Choco.game.score + '&level=' + Choco.game.level + '&character=' + escape(Choco.character),
+    url: 'http://rasterstudio.hu/api/chocofly.store_highscore',
+    data: 'sessionId=' + escape(Choco.sessionId) + '&name=' + name + '&score=' + Choco.game.score + '&level=' + Choco.game.level + '&character=' + escape(Choco.character),
     dataType: 'json',
     cache: false,
     crossDomain: true,
