@@ -7,7 +7,7 @@
 
 var Choco = Choco || {};
 
-Choco.screen = 'highscore';
+Choco.screen = 'start';
 
 Choco.pausing = 0;
 Choco.gameSpeed = 4;
@@ -566,8 +566,10 @@ Choco.getHighScores = function (callback) {
       }
     },
     success: function (data, textStatus, XMLHttpRequest) {
-      Choco.highScores = data;
-      callback();
+      if (data.result==='ok'){
+        Choco.highScores = data.scores;
+        callback();
+      }            
     }
 
   });
@@ -615,13 +617,12 @@ Choco.storeHighScore = function (name) {
  * Draws highscore box
  */
 Choco.drawHighScores = function () {
-  return;
   var row;
   var rank = 1;
   var score = (Choco.game ? Choco.game.score : 0);
   $('#rank1, #rank2, #rank3, #rank4').removeClass('reached');
   for (var i = 0; i < Choco.highScores.length; i++) {
-    if (rank > 4) {
+    if (rank > 8) {
       break;
     }
     if (!Choco.highScoreReached && score > Choco.highScores[i].score) {
@@ -631,8 +632,8 @@ Choco.drawHighScores = function () {
       $('#rank' + rank).addClass('reached');
       rank++;
     }
-    row = $('<div class="player-name">' + Choco.highScores[i].name + '</div><div class="score ' + Choco.highScores[i].character + '" title="' + Choco.highScores[i].character.toUpperCase() + '">' + Choco.highScores[i].score + '</div>');
-    $('#hs' + rank).html('').append(row);
+    $('#rank'+rank+' .username').html(Choco.highScores[i].name);
+    $('#rank'+rank+' .score').html(Choco.highScores[i].score);
     rank++;
   }
 

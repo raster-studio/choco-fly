@@ -15,11 +15,24 @@
 
 }
 
+@font-face {
+    font-family: 'Museo';
+    src: url('../fonts/museo900-regular-webfont.eot');
+    src: url('../fonts/museo900-regular-webfont.eot?#iefix') format('embedded-opentype'),
+         url('../fonts/museo900-regular-webfont.woff2') format('woff2'),
+         url('../fonts/museo900-regular-webfont.woff') format('woff'),
+         url('../fonts/museo900-regular-webfont.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+
+}
+
 body{
   background: #000;
   width: 100%;
   height: 100%;
   font-family: Ubuntu;
+  font-size: 14px;
 }
 
 #viewport{  
@@ -244,6 +257,7 @@ progress{
   width: 554px;
   height: 123px;  
   position: absolute;
+  font-family: Museo;
 }
 
 #screen-highscore #rank1{
@@ -307,6 +321,22 @@ progress{
   right: 0;
   margin: auto;
   top: 10px;
+}
+
+#screen-highscore .username{
+  position: absolute;
+  color: #fff;
+  font-size: 2.4em;
+  top: 40px;
+  left: 140px;
+}
+
+#screen-highscore .score{
+  position: absolute;
+  color: #fff;
+  font-size: 2.4em;
+  top: 38px;
+  right: 40px;
 }
 
 
