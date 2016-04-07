@@ -258,6 +258,7 @@ progress{
   height: 123px;  
   position: absolute;
   font-family: Museo;
+  display: none;
 }
 
 #screen-highscore #rank1{
@@ -310,6 +311,7 @@ progress{
   height: 430px;
   left: 625px;
   top: 178px;
+  display: none;
 }
 
 #hs-choco{
@@ -321,6 +323,7 @@ progress{
   right: 0;
   margin: auto;
   top: 10px;
+  display: none;
 }
 
 #screen-highscore .username{

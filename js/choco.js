@@ -112,6 +112,11 @@ Choco.handleScreen = function () {
       Choco.getHighScores(function () {
         Choco.drawHighScores();
       });
+      var tl3 = new TimelineMax({repeat: 0});
+      tl3.add(TweenLite.fromTo('#screen-highscore #hs-choco', 0.75, {autoAlpha: 0, scale: 0}, {display: 'block', autoAlpha: 1, scale: 1, ease: "Expo.easeInOut"}), 'highscore');
+      tl3.add(TweenLite.fromTo('#screen-highscore #hs-separator', 0.75, {autoAlpha: 0, scale: 0}, {display: 'block', autoAlpha: 1, scale: 1, ease: "Expo.easeInOut"}), 'highscore+=0.3');
+      tl3.add(TweenLite.fromTo('#screen-highscore .highscore', 0.75, {autoAlpha: 0}, {display: 'block', autoAlpha: 1, ease: "Expo.easeInOut"}), 'highscore+=0.7');
+
       break;
   }
 };
@@ -142,7 +147,7 @@ Choco.switchScreen = function (screen) {
       Choco.resetGame();
       break;
     case 'highscore':
-      $('#screen-highscore .hill-back, #highscore-left, #highscore-right, #highscore-table, #highscore-logo, #highscore-title, #screen-highscore .falling-snow').hide();
+      $('#screen-highscore .highscore, #hs-choco, #hs-separator').hide();
       break;
   }
   $('.screen.active').fadeOut(300, function () {
