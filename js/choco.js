@@ -139,7 +139,7 @@ Choco.switchScreen = function (screen) {
     case 'choose':
       $('#choose-logo, #choose-button, #screen-choose .character').hide();
       $('#screen-choose .character').removeAttr('id').removeClass('loaded');
-      Choco.chooseAnimFinished = false;
+      Choco.chooseAnimFinished = false;      
       break;
     case 'game':
       $('#lives-box, #score-box, #level-box, #ready, #steady, #go, #game-over, #end-score, .touch').hide();
@@ -715,8 +715,8 @@ $(document).ready(function () {
   });
 
   // Start button
-  $('#start-button').click(function () {
-    Choco.switchScreen('choose');
+  $('#start_button').click(function () {
+    Choco.switchScreen('game');
   });
 
   // Choose character
