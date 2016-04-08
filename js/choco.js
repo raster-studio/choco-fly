@@ -233,8 +233,8 @@ Choco.resetGame = function () {
   if (Choco.game === null) {
     Choco.game = new Kemist.GameEngine({
       canvas: document.getElementById("game-stage"),
-      width: 1024,
-      height: 768,
+      width: 1280,
+      height: 720,
       doubleBuffering: false,
       lives: 3,
       onInit: Choco.startLevel,
