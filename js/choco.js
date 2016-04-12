@@ -44,6 +44,7 @@ Choco.screenSwitcherDelay = 10000;
 Choco.loader = null;
 
 Choco.game = null;
+Choco.level_type='day';
 
 Choco.imageResources = [
   "images/bg_day.png", "images/clouds.png", "images/grass_day.png", "images/grass_night.png", "images/highscore.png",
@@ -58,6 +59,24 @@ Choco.soundResources = [
 //  {name:'music', url:'sounds/green_day_basket_case.mp3', loop: true, polyphony: false, volume: 0.2}
 
 ];
+
+Choco.clouds = {
+  '1': {
+    img: 'images/clouds.png',
+    size: [627, 72, 0, 0]
+  },
+  '2': {
+    img: 'images/clouds.png',
+    size: [264, 28, 494, 74]
+  }
+};
+
+
+Choco.background = {
+  day: 'images/bg_day.png',
+  night: 'images/bg_night.png'
+};
+
 
 
 
@@ -260,7 +279,16 @@ Choco.resetGame = function () {
  */
 Choco.generateLandscape = function () {
 
+  for (var i=0;i<5;i++){
+    Choco.createCloud([Kemist.getRandomInt(-70,120),i*120-Kemist.getRandomInt(0,20)]);    
+  }
 
+};
+
+
+
+Choco.createCloud = function(pos){
+  Choco.createRandomObject(pos,'cloud','background_objects');
 };
 
 
@@ -279,7 +307,7 @@ Choco.createRandomObject = function (pos, type, container) {
 
   var obj = new Kemist.Entity(
           pos,
-          new Kemist.Sprite(item.img, [0, 0], [item.size[0], item.size[1]]),
+          new Kemist.Sprite(item.img, [item.size[2], item.size[3]], [item.size[0], item.size[1]]),
           {type: type}
   );
 
@@ -438,7 +466,7 @@ Choco.updateEntities = function (dt) {
 
 
   if (Choco.debug) {
-    $('#debug').html('Distance: ' + Choco.distance + '/' + Choco.levelDistances[Choco.game.level] + ', stones: ' + Choco.stone_objects.length + ', gifts:' + Choco.gift_objects.length + ', background objects: ' + Choco.background_objects.length);
+//    $('#debug').html('Distance: ' + Choco.distance + '/' + Choco.levelDistances[Choco.game.level] + ', stones: ' + Choco.stone_objects.length + ', gifts:' + Choco.gift_objects.length + ', background objects: ' + Choco.background_objects.length);
   }
 };
 
@@ -502,12 +530,30 @@ Choco.getConflictlessCoordinates = function (type) {
 /**
  * Renders game elements
  */
-Choco.renderGame = function () {
-//    Choco.game.renderEntities(Choco.stone_objects);
+Choco.renderGame = function (game) {
+  var ctx=game.ctx;
+  var pattern=ctx.createPattern(Kemist.Resources.get(Choco.background[Choco.level_type]), 'repeat-x');
+  ctx.fillStyle = pattern;
+  ctx.fillRect(0,0,1280,960);
+  
   // Render the player if the game isn't over
-  if (!Choco.game.isGameOver) {
-    Choco.game.renderEntity(Choco.player);
+  if (!game.isGameOver) {
+//    Choco.game.renderEntity(Choco.player);
   }
+  var ground=new Kemist.Entity(
+    [0, 617],
+    new Kemist.Sprite('images/grass_'+Choco.level_type+'.png', [0, 0], [1280, 103]),
+    {type:'ground'}
+  );
+  
+  if (typeof Choco.debug_once === 'undefined'){
+    console.log(ground);
+    Choco.debug_once=true;
+  }
+    
+  
+  game.renderEntities(Choco.background_objects); 
+  game.renderEntity(ground);
 
 };
 
