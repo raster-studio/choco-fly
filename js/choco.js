@@ -306,9 +306,8 @@ Choco.generateLandscape = function () {
   Choco.ground_objects.push(ground2);
 
 
-  for (var i = 0; i < 6; i++) {
-    pos = [Kemist.getRandomInt(300, 1200), Kemist.getRandomInt(0, 600)];
-    Choco.createCloud(pos);
+  for (var i = 0; i < 6; i++) {        
+    Choco.createCloud(300,1200,Math.round(Choco.gameSpeed / 5));
   }
 
 //  var mountain1=new Kemist.Entity(
@@ -323,8 +322,34 @@ Choco.generateLandscape = function () {
 
 
 
-Choco.createCloud = function (pos) {
-  Choco.createRandomObject(pos, 'cloud');
+Choco.createCloud = function (min,max,speed) {
+  var index = Kemist.getRandomInt(1, Object.keys(Choco.clouds).length);
+  var item = Choco.clouds[index];
+
+  var i=0;
+  var pos;
+  var same=true;
+  while (same){
+    if (i > Choco.boundTrialThreshold){
+      break;
+    } 
+    pos = [Kemist.getRandomInt(min, max), Kemist.getRandomInt(0, 600)];
+    same=Choco.checkConflicts(pos[0],pos[1],item.size,Choco.cloud_objects);
+    i++;
+  }
+  
+  
+  if (i>100){
+    return;
+  }
+
+  var obj = new Kemist.Entity(
+          pos,
+          new Kemist.Sprite(item.img, [item.size[2], item.size[3]], [item.size[0], item.size[1]]),
+          {type:'cloud',speed:speed}
+  );
+
+  Choco.cloud_objects.push(obj);
 };
 
 
@@ -336,19 +361,19 @@ Choco.createCloud = function (pos) {
  * @param {string} type
  * @param {Array} items
  */
-Choco.createRandomObject = function (pos, type, container) {
-  var items = Choco[type + 's'];
+Choco.createRandomObject = function (pos, params, container) {
+  var items = Choco[params.type + 's'];
   var index = Kemist.getRandomInt(1, Object.keys(items).length);
   var item = items[index];
 
   var obj = new Kemist.Entity(
           pos,
           new Kemist.Sprite(item.img, [item.size[2], item.size[3]], [item.size[0], item.size[1]]),
-          {type: type}
+          params
   );
 
   if (typeof container === 'undefined') {
-    Choco[type + '_objects'].push(obj);
+    Choco[params.type + '_objects'].push(obj);
   } else {
     Choco[container].push(obj);
   }
@@ -506,10 +531,10 @@ Choco.updateEntities = function (dt) {
   for (var i = 0; i < Choco.cloud_objects.length; i++) {
     var obj = Choco.cloud_objects[i];
     Choco.logOnce(obj);
-    obj.pos[0] -= Math.round(Choco.gameSpeed / 5);
+    obj.pos[0] -= obj.params.speed;
 
     if (obj.pos[0] < 200 && Choco.cloud_objects.length < 12) {
-      Choco.createCloud([Kemist.getRandomInt(1300, 1500), Kemist.getRandomInt(0, 60) * 10]);
+      Choco.createCloud(1300,1500,Math.round(Choco.gameSpeed / 5));
     }
     if (obj.pos[0] < (obj.sprite.size[0] * -1)) {
       Choco.cloud_objects.splice(i, 1);
