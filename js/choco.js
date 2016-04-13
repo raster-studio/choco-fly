@@ -27,7 +27,7 @@ Choco.animFrameRequested = false;
 Choco.touchLeft = false;
 Choco.touchRight = false;
 
-Choco.skipReady = false;
+Choco.skipReady = true;
 Choco.skipIntro = false;
 Choco.debug = true;
 Choco.immortal = false;
@@ -79,7 +79,8 @@ Choco.background = {
 
 
 
-
+Choco.cloud_objects=[];
+Choco.tree_objects=[];
 Choco.background_objects = [];
 Choco.finish = null;
 
@@ -280,7 +281,7 @@ Choco.resetGame = function () {
 Choco.generateLandscape = function () {
 
   for (var i=0;i<5;i++){
-    Choco.createCloud([Kemist.getRandomInt(-70,120),i*120-Kemist.getRandomInt(0,20)]);    
+    Choco.createCloud([Kemist.getRandomInt(1200,1300),i*120+Kemist.getRandomInt(0,20)]);    
   }
 
 };
@@ -288,7 +289,7 @@ Choco.generateLandscape = function () {
 
 
 Choco.createCloud = function(pos){
-  Choco.createRandomObject(pos,'cloud','background_objects');
+  Choco.createRandomObject(pos,'cloud');
 };
 
 
@@ -405,6 +406,7 @@ Choco.update = function (dt) {
   }
 
   Choco.updateEntities(dt);
+
 };
 
 
@@ -463,9 +465,23 @@ Choco.updateEntities = function (dt) {
   } else if (!Choco.finishing) {
     Choco.player.pos[1] = 200;
   }
+    
+    
+  for(var i=0; i<Choco.cloud_objects.length; i++) {
+    var obj=Choco.cloud_objects[i];
+    Choco.logOnce(obj);
+    obj.pos[0]-=Choco.gameSpeed;
+    if (obj.pos[0] < (obj.sprite.size[0]*-1)) {
+      Choco.cloud_objects.splice(i, 1);
+      i--;
+      continue;
+    }
+  } 
 
-
+  
+  
   if (Choco.debug) {
+    $('#debug').html('Clouds: ' + Choco.cloud_objects.length+ ', background objects: ' + Choco.background_objects.length);
 //    $('#debug').html('Distance: ' + Choco.distance + '/' + Choco.levelDistances[Choco.game.level] + ', stones: ' + Choco.stone_objects.length + ', gifts:' + Choco.gift_objects.length + ', background objects: ' + Choco.background_objects.length);
   }
 };
@@ -546,15 +562,21 @@ Choco.renderGame = function (game) {
     {type:'ground'}
   );
   
-  if (typeof Choco.debug_once === 'undefined'){
-    console.log(ground);
-    Choco.debug_once=true;
-  }
-    
+   
   
   game.renderEntities(Choco.background_objects); 
+  game.renderEntities(Choco.cloud_objects); 
   game.renderEntity(ground);
 
+};
+
+
+
+Choco.logOnce = function(message){
+  if (typeof Choco.debug_once === 'undefined'){
+    console.log(message);
+    Choco.debug_once=true;
+  }
 };
 
 

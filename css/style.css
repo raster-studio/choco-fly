@@ -342,6 +342,12 @@ progress{
   right: 40px;
 }
 
+#debug{
+  position: absolute;
+  left: 0;
+  bottom: 0;
+}
+
 
 @keyframes cloud
 {
