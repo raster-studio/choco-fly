@@ -7,7 +7,7 @@
 
 var Choco = Choco || {};
 
-Choco.screen = 'start';
+Choco.screen = 'game';
 
 Choco.pausing = 0;
 Choco.gameSpeed = 4;
@@ -44,7 +44,7 @@ Choco.screenSwitcherDelay = 10000;
 Choco.loader = null;
 
 Choco.game = null;
-Choco.level_type='day';
+Choco.level_type = 'day';
 
 Choco.imageResources = [
   "images/bg_day.png", "images/clouds.png", "images/grass_day.png", "images/grass_night.png", "images/highscore.png",
@@ -68,6 +68,14 @@ Choco.clouds = {
   '2': {
     img: 'images/clouds.png',
     size: [264, 28, 494, 74]
+  },
+  '3': {
+    img: 'images/clouds.png',
+    size: [304, 60, 619, 0]
+  },
+  '4': {
+    img: 'images/clouds.png',
+    size: [496, 80, 0, 80]
   }
 };
 
@@ -79,8 +87,9 @@ Choco.background = {
 
 
 
-Choco.cloud_objects=[];
-Choco.tree_objects=[];
+Choco.cloud_objects = [];
+Choco.tree_objects = [];
+Choco.ground_objects = [];
 Choco.background_objects = [];
 Choco.finish = null;
 
@@ -159,7 +168,7 @@ Choco.switchScreen = function (screen) {
     case 'choose':
       $('#choose-logo, #choose-button, #screen-choose .character').hide();
       $('#screen-choose .character').removeAttr('id').removeClass('loaded');
-      Choco.chooseAnimFinished = false;      
+      Choco.chooseAnimFinished = false;
       break;
     case 'game':
       $('#lives-box, #score-box, #level-box, #ready, #steady, #go, #game-over, #end-score, .touch').hide();
@@ -280,16 +289,42 @@ Choco.resetGame = function () {
  */
 Choco.generateLandscape = function () {
 
-  for (var i=0;i<5;i++){
-    Choco.createCloud([Kemist.getRandomInt(1200,1300),i*120+Kemist.getRandomInt(0,20)]);    
+
+
+  var ground1 = new Kemist.Entity(
+          [0, 617],
+          new Kemist.Sprite('images/grass_' + Choco.level_type + '.png', [0, 0], [1280, 103])
+          );
+
+  Choco.ground_objects.push(ground1);
+
+  var ground2 = new Kemist.Entity(
+          [1279, 617],
+          new Kemist.Sprite('images/grass_' + Choco.level_type + '.png', [0, 0], [1280, 103])
+          );
+
+  Choco.ground_objects.push(ground2);
+
+
+  for (var i = 0; i < 6; i++) {
+    pos = [Kemist.getRandomInt(300, 1200), Kemist.getRandomInt(0, 600)];
+    Choco.createCloud(pos);
   }
+
+//  var mountain1=new Kemist.Entity(
+//    [0, 617],
+//    new Kemist.Sprite('images/grass_'+Choco.level_type+'.png', [1280, 0], [1280, 103]),
+//    {type:'mountain'}
+//  );
+//  
+//  Choco.background_objects.push(mountain1);
 
 };
 
 
 
-Choco.createCloud = function(pos){
-  Choco.createRandomObject(pos,'cloud');
+Choco.createCloud = function (pos) {
+  Choco.createRandomObject(pos, 'cloud');
 };
 
 
@@ -465,23 +500,50 @@ Choco.updateEntities = function (dt) {
   } else if (!Choco.finishing) {
     Choco.player.pos[1] = 200;
   }
-    
-    
-  for(var i=0; i<Choco.cloud_objects.length; i++) {
-    var obj=Choco.cloud_objects[i];
+
+
+  // Move clouds
+  for (var i = 0; i < Choco.cloud_objects.length; i++) {
+    var obj = Choco.cloud_objects[i];
     Choco.logOnce(obj);
-    obj.pos[0]-=Choco.gameSpeed;
-    if (obj.pos[0] < (obj.sprite.size[0]*-1)) {
+    obj.pos[0] -= Math.round(Choco.gameSpeed / 5);
+
+    if (obj.pos[0] < 200 && Choco.cloud_objects.length < 12) {
+      Choco.createCloud([Kemist.getRandomInt(1300, 1500), Kemist.getRandomInt(0, 60) * 10]);
+    }
+    if (obj.pos[0] < (obj.sprite.size[0] * -1)) {
       Choco.cloud_objects.splice(i, 1);
       i--;
       continue;
     }
-  } 
+  }
 
-  
-  
+
+  // Move ground
+  if (!Choco.pausing && !Choco.finishing && !Choco.died) {
+    for (var i = 0; i < Choco.ground_objects.length; i++) {
+      var obj = Choco.ground_objects[i];
+      
+
+      if (obj.pos[0] <= -1274){
+//        Choco.finishing=true;
+        if (i==0){
+          Choco.ground_objects[0].pos[0]=Choco.ground_objects[1].pos[0]+1274;
+        }else{
+          Choco.ground_objects[1].pos[0]=Choco.ground_objects[0].pos[0]+1274;
+        }
+      
+      }else{
+        obj.pos[0] -= Math.round(Choco.gameSpeed / 3);
+      }
+    }
+  }
+
+  $('#debug').html(Choco.ground_objects[0].pos[0]+' , '+Choco.ground_objects[1].pos[0]);
+
+
   if (Choco.debug) {
-    $('#debug').html('Clouds: ' + Choco.cloud_objects.length+ ', background objects: ' + Choco.background_objects.length);
+//    $('#debug').html('Clouds: ' + Choco.cloud_objects.length + ', background objects: ' + Choco.background_objects.length);
 //    $('#debug').html('Distance: ' + Choco.distance + '/' + Choco.levelDistances[Choco.game.level] + ', stones: ' + Choco.stone_objects.length + ', gifts:' + Choco.gift_objects.length + ', background objects: ' + Choco.background_objects.length);
   }
 };
@@ -547,35 +609,29 @@ Choco.getConflictlessCoordinates = function (type) {
  * Renders game elements
  */
 Choco.renderGame = function (game) {
-  var ctx=game.ctx;
-  var pattern=ctx.createPattern(Kemist.Resources.get(Choco.background[Choco.level_type]), 'repeat-x');
+  var ctx = game.ctx;
+  var pattern = ctx.createPattern(Kemist.Resources.get(Choco.background[Choco.level_type]), 'repeat-x');
   ctx.fillStyle = pattern;
-  ctx.fillRect(0,0,1280,960);
-  
+  ctx.fillRect(0, 0, 1280, 960);
+
   // Render the player if the game isn't over
   if (!game.isGameOver) {
 //    Choco.game.renderEntity(Choco.player);
   }
-  var ground=new Kemist.Entity(
-    [0, 617],
-    new Kemist.Sprite('images/grass_'+Choco.level_type+'.png', [0, 0], [1280, 103]),
-    {type:'ground'}
-  );
-  
-   
-  
-  game.renderEntities(Choco.background_objects); 
-  game.renderEntities(Choco.cloud_objects); 
-  game.renderEntity(ground);
+
+
+  game.renderEntities(Choco.background_objects);
+  game.renderEntities(Choco.cloud_objects);
+  game.renderEntities(Choco.ground_objects);
 
 };
 
 
 
-Choco.logOnce = function(message){
-  if (typeof Choco.debug_once === 'undefined'){
+Choco.logOnce = function (message) {
+  if (typeof Choco.debug_once === 'undefined') {
     console.log(message);
-    Choco.debug_once=true;
+    Choco.debug_once = true;
   }
 };
 
@@ -588,7 +644,7 @@ Choco.createSession = function (callback) {
   var year = now.getYear() + 1900;
   var month = now.getMonth() + 1;
   var day = now.getDate();
-  var timeStamp = year + '' + (month < 10 ? '0' + month : month) + '' + (day < 10 ? '0' + day : day); 
+  var timeStamp = year + '' + (month < 10 ? '0' + month : month) + '' + (day < 10 ? '0' + day : day);
   var password = CryptoJS.MD5('ChOcOfLy' + timeStamp.toString());
   $.ajax({
     type: 'GET',
@@ -607,9 +663,9 @@ Choco.createSession = function (callback) {
     success: function (data, textStatus, XMLHttpRequest) {
       if (data.result == 'ok') {
         Choco.sessionId = data.sessionId;
-        if (typeof callback === 'function'){
+        if (typeof callback === 'function') {
           callback();
-        }        
+        }
       }
     }
 
@@ -621,12 +677,12 @@ Choco.createSession = function (callback) {
  * Gets high scores
  */
 Choco.getHighScores = function (callback) {
-  if (Choco.sessionId===null){
+  if (Choco.sessionId === null) {
     return;
   }
   $.ajax({
     type: 'GET',
-    url: 'http://rasterstudio.hu/api/chocofly.get_highscores/'+escape(Choco.sessionId),
+    url: 'http://rasterstudio.hu/api/chocofly.get_highscores/' + escape(Choco.sessionId),
     data: '',
     dataType: 'json',
     cache: false,
@@ -639,10 +695,10 @@ Choco.getHighScores = function (callback) {
       }
     },
     success: function (data, textStatus, XMLHttpRequest) {
-      if (data.result==='ok'){
+      if (data.result === 'ok') {
         Choco.highScores = data.scores;
         callback();
-      }            
+      }
     }
 
   });
@@ -653,7 +709,7 @@ Choco.getHighScores = function (callback) {
  * Store new high score
  */
 Choco.storeHighScore = function (name) {
-  if (Choco.sessionId===null){
+  if (Choco.sessionId === null) {
     return;
   }
 
@@ -705,8 +761,8 @@ Choco.drawHighScores = function () {
       $('#rank' + rank).addClass('reached');
       rank++;
     }
-    $('#rank'+rank+' .username').html(Choco.highScores[i].name);
-    $('#rank'+rank+' .score').html(Choco.highScores[i].score);
+    $('#rank' + rank + ' .username').html(Choco.highScores[i].name);
+    $('#rank' + rank + ' .score').html(Choco.highScores[i].score);
     rank++;
   }
 
