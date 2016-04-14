@@ -60,25 +60,47 @@ Choco.soundResources = [
 
 ];
 
-Choco.clouds = {
-  '1': {
-    img: 'images/clouds.png',
-    size: [627, 72, 0, 0]
-  },
-  '2': {
-    img: 'images/clouds.png',
-    size: [264, 28, 494, 74]
-  },
-  '3': {
-    img: 'images/clouds.png',
-    size: [304, 60, 619, 0]
-  },
-  '4': {
-    img: 'images/clouds.png',
-    size: [496, 80, 0, 80]
-  }
-};
 
+Choco.clouds = {
+  day:
+          {
+            '1': {
+              img: 'images/clouds.png',
+              size: [627, 72, 0, 0]
+            },
+            '2': {
+              img: 'images/clouds.png',
+              size: [264, 28, 494, 74]
+            },
+            '3': {
+              img: 'images/clouds.png',
+              size: [304, 60, 619, 0]
+            },
+            '4': {
+              img: 'images/clouds.png',
+              size: [496, 80, 0, 80]
+            }
+          },
+  night:
+          {
+            '1': {
+              img: 'images/clouds.png',
+              size: [627, 72, 0, 168]
+            },
+            '2': {
+              img: 'images/clouds.png',
+              size: [264, 28, 494, 248]
+            },
+            '3': {
+              img: 'images/clouds.png',
+              size: [304, 60, 619, 165]
+            },
+            '4': {
+              img: 'images/clouds.png',
+              size: [496, 80, 0, 247]
+            }
+          }
+};
 
 Choco.background = {
   day: 'images/bg_day.png',
@@ -289,8 +311,7 @@ Choco.resetGame = function () {
  */
 Choco.generateLandscape = function () {
 
-
-
+  // Ground * 2
   var ground1 = new Kemist.Entity(
           [0, 617],
           new Kemist.Sprite('images/grass_' + Choco.level_type + '.png', [0, 0], [1280, 103])
@@ -306,47 +327,57 @@ Choco.generateLandscape = function () {
   Choco.ground_objects.push(ground2);
 
 
-  for (var i = 0; i < 6; i++) {        
-    Choco.createCloud(300,1200,Math.round(Choco.gameSpeed / 5));
+  // Clouds
+  for (var i = 0; i < 5; i++) {
+    Choco.createCloud(300, 1200, Choco.gameSpeed / Kemist.getRandomInt(3, 8));
   }
 
-//  var mountain1=new Kemist.Entity(
-//    [0, 617],
-//    new Kemist.Sprite('images/grass_'+Choco.level_type+'.png', [1280, 0], [1280, 103]),
-//    {type:'mountain'}
-//  );
-//  
-//  Choco.background_objects.push(mountain1);
+  var pos = Choco.level_type == 'day' ? [0, 211] : [646, 211];
+  var mountain1 = new Kemist.Entity(
+          [0, 246],
+          new Kemist.Sprite('images/terrain.png', pos, [646, 400]),
+          {type: 'mountain'}
+  );
+
+  Choco.background_objects.push(mountain1);
+
+  var mountain2 = new Kemist.Entity(
+          [650, 246],
+          new Kemist.Sprite('images/terrain.png', pos, [646, 400]),
+          {type: 'mountain'}
+  );
+
+  Choco.background_objects.push(mountain2);
 
 };
 
 
 
-Choco.createCloud = function (min,max,speed) {
-  var index = Kemist.getRandomInt(1, Object.keys(Choco.clouds).length);
-  var item = Choco.clouds[index];
+Choco.createCloud = function (min, max, speed) {
+  var index = Kemist.getRandomInt(1, Object.keys(Choco.clouds[Choco.level_type]).length);
+  var item = Choco.clouds[Choco.level_type][index];
 
-  var i=0;
+  var i = 0;
   var pos;
-  var same=true;
-  while (same){
-    if (i > Choco.boundTrialThreshold){
+  var same = true;
+  while (same) {
+    if (i > Choco.boundTrialThreshold) {
       break;
-    } 
-    pos = [Kemist.getRandomInt(min, max), Kemist.getRandomInt(0, 600)];
-    same=Choco.checkConflicts(pos[0],pos[1],item.size,Choco.cloud_objects);
+    }
+    pos = [Kemist.getRandomInt(min, max), Kemist.getRandomInt(0, 400)];
+    same = Choco.checkConflicts(pos[0], pos[1], item.size, Choco.cloud_objects);
     i++;
   }
-  
-  
-  if (i>100){
+
+
+  if (i > 100) {
     return;
   }
 
   var obj = new Kemist.Entity(
           pos,
           new Kemist.Sprite(item.img, [item.size[2], item.size[3]], [item.size[0], item.size[1]]),
-          {type:'cloud',speed:speed}
+          {type: 'cloud', speed: speed}
   );
 
   Choco.cloud_objects.push(obj);
@@ -370,7 +401,7 @@ Choco.createRandomObject = function (pos, params, container) {
           pos,
           new Kemist.Sprite(item.img, [item.size[2], item.size[3]], [item.size[0], item.size[1]]),
           params
-  );
+          );
 
   if (typeof container === 'undefined') {
     Choco[params.type + '_objects'].push(obj);
@@ -530,11 +561,10 @@ Choco.updateEntities = function (dt) {
   // Move clouds
   for (var i = 0; i < Choco.cloud_objects.length; i++) {
     var obj = Choco.cloud_objects[i];
-    Choco.logOnce(obj);
     obj.pos[0] -= obj.params.speed;
 
-    if (obj.pos[0] < 200 && Choco.cloud_objects.length < 12) {
-      Choco.createCloud(1300,1500,Math.round(Choco.gameSpeed / 5));
+    if (obj.pos[0] < 200 && Choco.cloud_objects.length < 10) {
+      Choco.createCloud(1300, 1500, Choco.gameSpeed / Kemist.getRandomInt(3, 8));
     }
     if (obj.pos[0] < (obj.sprite.size[0] * -1)) {
       Choco.cloud_objects.splice(i, 1);
@@ -544,31 +574,43 @@ Choco.updateEntities = function (dt) {
   }
 
 
-  // Move ground
+  // Move ground and background objects
   if (!Choco.pausing && !Choco.finishing && !Choco.died) {
+    // Grounds
     for (var i = 0; i < Choco.ground_objects.length; i++) {
       var obj = Choco.ground_objects[i];
-      
 
-      if (obj.pos[0] <= -1274){
-//        Choco.finishing=true;
-        if (i==0){
-          Choco.ground_objects[0].pos[0]=Choco.ground_objects[1].pos[0]+1274;
-        }else{
-          Choco.ground_objects[1].pos[0]=Choco.ground_objects[0].pos[0]+1274;
+      if (obj.pos[0] <= -1274) {
+        if (i == 0) {
+          Choco.ground_objects[0].pos[0] = Choco.ground_objects[1].pos[0] + 1274;
+        } else {
+          Choco.ground_objects[1].pos[0] = Choco.ground_objects[0].pos[0] + 1274;
         }
-      
-      }else{
-        obj.pos[0] -= Math.round(Choco.gameSpeed / 3);
+
+      } else {
+        obj.pos[0] -= Choco.gameSpeed / 3;
+      }
+    }
+
+    // Move background elements
+    for (var i = 0; i < Choco.background_objects.length; i++) {
+      var obj = Choco.background_objects[i];
+      var speed = obj.params.type === 'tree' ? (Choco.gameSpeed / 3) : (Choco.gameSpeed / 7);
+
+      if (obj.pos[0] <= (obj.sprite.size[0] * -1)) {
+        Choco.background_objects.splice(i, 1);
+        i--;
+        continue;
+      } else {
+        obj.pos[0] -= speed;
       }
     }
   }
 
-  $('#debug').html(Choco.ground_objects[0].pos[0]+' , '+Choco.ground_objects[1].pos[0]);
 
 
   if (Choco.debug) {
-//    $('#debug').html('Clouds: ' + Choco.cloud_objects.length + ', background objects: ' + Choco.background_objects.length);
+    $('#debug').html('Clouds: ' + Choco.cloud_objects.length + ', background objects: ' + Choco.background_objects.length);
 //    $('#debug').html('Distance: ' + Choco.distance + '/' + Choco.levelDistances[Choco.game.level] + ', stones: ' + Choco.stone_objects.length + ', gifts:' + Choco.gift_objects.length + ', background objects: ' + Choco.background_objects.length);
   }
 };
