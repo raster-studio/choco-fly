@@ -102,6 +102,40 @@ Choco.clouds = {
           }
 };
 
+
+Choco.trees = {
+  day:
+          {
+            '1': {
+              img: 'images/trees.png',
+              size: [215, 157, 215, 0]
+            },
+            '2': {
+              img: 'images/trees.png',
+              size: [248, 246, 244, 158]
+            },
+            '3': {
+              img: 'images/trees.png',
+              size: [332, 302, 0, 708]
+            },
+          },
+  night:
+          {
+            '1': {
+              img: 'images/trees.png',
+              size: [215, 157, 0, 0]
+            },
+            '2': {
+              img: 'images/trees.png',
+              size: [245, 246, 0, 156]
+            },
+            '3': {
+              img: 'images/trees.png',
+              size: [332, 302, 0, 405]
+            },
+          }
+};
+
 Choco.background = {
   day: 'images/bg_day.png',
   night: 'images/bg_night.png'
@@ -111,6 +145,7 @@ Choco.background = {
 
 Choco.cloud_objects = [];
 Choco.tree_objects = [];
+Choco.mountain_objects = [];
 Choco.ground_objects = [];
 Choco.background_objects = [];
 Choco.finish = null;
@@ -310,6 +345,11 @@ Choco.resetGame = function () {
  * Generates background elements
  */
 Choco.generateLandscape = function () {
+  
+  // Clouds
+  for (var i = 0; i < 5; i++) {
+    Choco.createCloud(300, 1200, Choco.gameSpeed / Kemist.getRandomInt(3, 8));
+  }
 
   // Ground * 2
   var ground1 = new Kemist.Entity(
@@ -327,10 +367,6 @@ Choco.generateLandscape = function () {
   Choco.ground_objects.push(ground2);
 
 
-  // Clouds
-  for (var i = 0; i < 5; i++) {
-    Choco.createCloud(300, 1200, Choco.gameSpeed / Kemist.getRandomInt(3, 8));
-  }
 
   var pos = Choco.level_type == 'day' ? [0, 211] : [646, 211];
   var mountain1 = new Kemist.Entity(
@@ -339,7 +375,7 @@ Choco.generateLandscape = function () {
           {type: 'mountain'}
   );
 
-  Choco.background_objects.push(mountain1);
+  Choco.mountain_objects.push(mountain1);
 
   var mountain2 = new Kemist.Entity(
           [650, 246],
@@ -347,7 +383,14 @@ Choco.generateLandscape = function () {
           {type: 'mountain'}
   );
 
-  Choco.background_objects.push(mountain2);
+  Choco.mountain_objects.push(mountain2);
+  
+  
+  
+// Trees
+  for (var i = 0; i < 3; i++) {
+    Choco.createTree(i*250);
+  }
 
 };
 
@@ -362,7 +405,7 @@ Choco.createCloud = function (min, max, speed) {
   var same = true;
   while (same) {
     if (i > Choco.boundTrialThreshold) {
-      break;
+      return;
     }
     pos = [Kemist.getRandomInt(min, max), Kemist.getRandomInt(0, 400)];
     same = Choco.checkConflicts(pos[0], pos[1], item.size, Choco.cloud_objects);
@@ -370,19 +413,42 @@ Choco.createCloud = function (min, max, speed) {
   }
 
 
-  if (i > 100) {
-    return;
-  }
 
   var obj = new Kemist.Entity(
           pos,
           new Kemist.Sprite(item.img, [item.size[2], item.size[3]], [item.size[0], item.size[1]]),
-          {type: 'cloud', speed: speed}
+          {speed: speed}
   );
 
   Choco.cloud_objects.push(obj);
 };
 
+
+
+Choco.createTree = function (x) {
+  var index = Kemist.getRandomInt(1, Object.keys(Choco.trees[Choco.level_type]).length);
+  var item = Choco.trees[Choco.level_type][index];
+
+  var i = 0;
+  var pos;
+  var same = true;
+  while (same) {
+    if (i > Choco.boundTrialThreshold) {
+      return;
+    }
+    pos = [x, 655-item.size[1]];
+    same = Choco.checkConflicts(pos[0], pos[1], item.size, Choco.tree_objects);
+    i++;
+  }
+
+
+  var obj = new Kemist.Entity(
+          pos,
+          new Kemist.Sprite(item.img, [item.size[2], item.size[3]], [item.size[0], item.size[1]])
+  );
+
+  Choco.tree_objects.push(obj);
+};
 
 
 /**
@@ -592,25 +658,58 @@ Choco.updateEntities = function (dt) {
       }
     }
 
-    // Move background elements
-    for (var i = 0; i < Choco.background_objects.length; i++) {
-      var obj = Choco.background_objects[i];
-      var speed = obj.params.type === 'tree' ? (Choco.gameSpeed / 3) : (Choco.gameSpeed / 7);
+    // Move mountain objects
+    for (var i = 0; i < Choco.mountain_objects.length; i++) {
+      var obj = Choco.mountain_objects[i];
+      var speed = Choco.gameSpeed / 7;
 
       if (obj.pos[0] <= (obj.sprite.size[0] * -1)) {
-        Choco.background_objects.splice(i, 1);
+        Choco.mountain_objects.splice(i, 1);
         i--;
         continue;
       } else {
         obj.pos[0] -= speed;
       }
     }
+    
+    if (Choco.mountain_objects.length < 2){
+      var pos = Choco.level_type == 'day' ? [0, 211] : [646, 211];
+      var mountain1 = new Kemist.Entity(
+              [Kemist.getRandomInt(1300,1500), 246],
+              new Kemist.Sprite('images/terrain.png', pos, [646, 400]),
+              {type: 'mountain'}
+      );
+
+      Choco.mountain_objects.push(mountain1);
+    }
+    
+    // Move tree objects
+    for (var i = 0; i < Choco.tree_objects.length; i++) {
+      var obj = Choco.tree_objects[i];
+      var speed = Choco.gameSpeed / 3;
+
+      if (obj.pos[0] <= (obj.sprite.size[0] * -1)) {
+        Choco.tree_objects.splice(i, 1);
+        i--;
+        continue;
+      } else {
+        obj.pos[0] -= speed;
+      }
+    }
+    
+    if (Choco.tree_objects.length < 3){
+      Choco.createTree(Kemist.getRandomInt(1300,1500));
+    }
+    
+    
   }
+  
+  
 
 
 
   if (Choco.debug) {
-    $('#debug').html('Clouds: ' + Choco.cloud_objects.length + ', background objects: ' + Choco.background_objects.length);
+    $('#debug').html('Clouds: ' + Choco.cloud_objects.length + ', tree objects: ' + Choco.tree_objects.length+', mountain objects: ' + Choco.mountain_objects.length);
 //    $('#debug').html('Distance: ' + Choco.distance + '/' + Choco.levelDistances[Choco.game.level] + ', stones: ' + Choco.stone_objects.length + ', gifts:' + Choco.gift_objects.length + ', background objects: ' + Choco.background_objects.length);
   }
 };
@@ -687,8 +786,9 @@ Choco.renderGame = function (game) {
   }
 
 
-  game.renderEntities(Choco.background_objects);
   game.renderEntities(Choco.cloud_objects);
+  game.renderEntities(Choco.mountain_objects);
+  game.renderEntities(Choco.tree_objects);
   game.renderEntities(Choco.ground_objects);
 
 };
