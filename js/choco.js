@@ -51,7 +51,7 @@ Choco.imageResources = [
   "images/intro.png", "images/intro_background.png", "images/logos.png", "images/Museo900.png", "images/pickups.png",
   "images/planes.png", "images/terrain.png", "images/Toonish1.png", "images/Toonish2.png", "images/Toonish3.png",
   "images/Toonish4.png", "images/totem.png", "images/toucanFrames.png", "images/trees.png", "images/tutorial.png",
-  "images/uielements.png", "images/bg_night.png", "images/start_hazisweets.png"
+  "images/uielements.png", "images/bg_night.png", "images/start_hazisweets.png", "images/toucan2.png"
 ]
         ;
 
@@ -504,7 +504,7 @@ Choco.startLevel = function () {
 
   Choco.player = new Kemist.Entity(
           [470, 200],
-          new Kemist.Sprite('images/' + Choco.character + '_player.png', [0, 0], [87, 105]),
+          new Kemist.Sprite('images/toucan2.png', [0, 0], [342, 339], 16, [0,1,2,3,4,5,6,7,8,9,10,11,12]),
           {type: 'player'}
   );
 
@@ -701,7 +701,7 @@ Choco.updateEntities = function (dt) {
       Choco.createTree(Kemist.getRandomInt(1300,1500));
     }
     
-    
+    Choco.player.sprite.update(dt);
   }
   
   
@@ -709,7 +709,7 @@ Choco.updateEntities = function (dt) {
 
 
   if (Choco.debug) {
-    $('#debug').html('Clouds: ' + Choco.cloud_objects.length + ', tree objects: ' + Choco.tree_objects.length+', mountain objects: ' + Choco.mountain_objects.length);
+//    $('#debug').html('Clouds: ' + Choco.cloud_objects.length + ', tree objects: ' + Choco.tree_objects.length+', mountain objects: ' + Choco.mountain_objects.length);
 //    $('#debug').html('Distance: ' + Choco.distance + '/' + Choco.levelDistances[Choco.game.level] + ', stones: ' + Choco.stone_objects.length + ', gifts:' + Choco.gift_objects.length + ', background objects: ' + Choco.background_objects.length);
   }
 };
@@ -780,16 +780,18 @@ Choco.renderGame = function (game) {
   ctx.fillStyle = pattern;
   ctx.fillRect(0, 0, 1280, 960);
 
-  // Render the player if the game isn't over
-  if (!game.isGameOver) {
-//    Choco.game.renderEntity(Choco.player);
-  }
 
 
   game.renderEntities(Choco.cloud_objects);
   game.renderEntities(Choco.mountain_objects);
   game.renderEntities(Choco.tree_objects);
   game.renderEntities(Choco.ground_objects);
+  
+  // Render the player if the game isn't over
+  if (!game.isGameOver) {
+    Choco.game.renderEntity(Choco.player);
+  }
+
 
 };
 
