@@ -504,7 +504,7 @@ Choco.startLevel = function () {
 
   Choco.player = new Kemist.Entity(
           [470, 200],
-          new Kemist.Sprite('images/toucan2.png', [0, 0], [342, 339], 16, [0,1,2,3,4,5,6,7,8,9,10,11,12]),
+          new Kemist.Sprite('images/toucan2.png', [0, 0], [310, 308], 16, [0,1,2,3,4,5,6,7,8,9,10,11,12]),
           {type: 'player'}
   );
 
