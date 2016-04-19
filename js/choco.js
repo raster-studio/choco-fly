@@ -584,16 +584,18 @@ Choco.handleInput = function (dt) {
   Choco.upPressed = false;
   Choco.downPressed = false;
 
-  if (Choco.player.pos[1] > -70 && (Kemist.Input.isDown('UP') || Kemist.Input.isDown('w'))) {
-    move_speed = Math.round(Choco.playerSpeed * dt);
-    Choco.player.pos[1] -= move_speed;
+  if (Kemist.Input.isDown('UP') || Kemist.Input.isDown('w')) {
+    if (Choco.player.pos[1] > -70){
+      move_speed = Choco.playerSpeed * dt;
+      Choco.player.pos[1] -= move_speed;
+    }
     Choco.player.params.v = 0;
     Choco.upPressed = true;
   }
 
 
   if (Choco.player.pos[1] < 520 && (Kemist.Input.isDown('DOWN') || Kemist.Input.isDown('s'))) {
-    move_speed = Math.round(Choco.playerSpeed * dt);
+    move_speed = Choco.playerSpeed * dt * 2;
     Choco.player.pos[1] += move_speed;
     Choco.player.params.v = 0;
     Choco.downPressed = true;
