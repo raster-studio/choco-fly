@@ -505,7 +505,7 @@ Choco.startLevel = function () {
   Choco.log('Level ' + Choco.game.level + ' started, gameSpeed:' + Choco.gameSpeed + ', playerSpeed:' + Choco.playerSpeed);
 
   Choco.player = new Kemist.Entity(
-          [100, 200],
+          [-300, 200],
           new Kemist.Sprite('images/toucan2.png', [0, 0], [310, 308], 24, [0]),
           {type: 'player', v: 0}
   );
@@ -730,12 +730,16 @@ Choco.updateEntities = function (dt) {
       Choco.createTree(Kemist.getRandomInt(1300, 1500));
     }
 
-
-    if (!Choco.upPressed && Choco.player.pos[1] < 520) {
+    
+    if (Choco.player.pos[0] < 100){
+      Choco.player.pos[0] += Choco.gameSpeed ;
+      Choco.player.sprite.frames=[0,1,2,3,4,5,6,7,8,9,10,11,12];
+    }else if (!Choco.upPressed && Choco.player.pos[1] < 520) {
       Choco.player.params.v += Choco.gravity;
       Choco.player.pos[1] += (Choco.player.params.v / 2);
+      Choco.player.sprite.frames=[0];
     }
-
+          
 
     Choco.player.sprite.update(dt);
   }
