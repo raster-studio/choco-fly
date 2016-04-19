@@ -26,8 +26,8 @@ Choco.isPaused = false;
 Choco.screenHandlerCalled = false;
 Choco.chooseAnimFinished = false;
 Choco.animFrameRequested = false;
-Choco.touchLeft = false;
-Choco.touchRight = false;
+Choco.upPressed = false;
+Choco.downPressed = false;
 
 Choco.skipReady = true;
 Choco.skipIntro = false;
@@ -347,7 +347,7 @@ Choco.resetGame = function () {
  * Generates background elements
  */
 Choco.generateLandscape = function () {
-  
+
   // Clouds
   for (var i = 0; i < 5; i++) {
     Choco.createCloud(300, 1200, Choco.gameSpeed / Kemist.getRandomInt(3, 8));
@@ -386,12 +386,12 @@ Choco.generateLandscape = function () {
   );
 
   Choco.mountain_objects.push(mountain2);
-  
-  
-  
+
+
+
 // Trees
   for (var i = 0; i < 3; i++) {
-    Choco.createTree(i*250);
+    Choco.createTree(i * 250);
   }
 
 };
@@ -438,7 +438,7 @@ Choco.createTree = function (x) {
     if (i > Choco.boundTrialThreshold) {
       return;
     }
-    pos = [x, 655-item.size[1]];
+    pos = [x, 655 - item.size[1]];
     same = Choco.checkConflicts(pos[0], pos[1], item.size, Choco.tree_objects);
     i++;
   }
@@ -447,7 +447,7 @@ Choco.createTree = function (x) {
   var obj = new Kemist.Entity(
           pos,
           new Kemist.Sprite(item.img, [item.size[2], item.size[3]], [item.size[0], item.size[1]])
-  );
+          );
 
   Choco.tree_objects.push(obj);
 };
@@ -506,7 +506,7 @@ Choco.startLevel = function () {
 
   Choco.player = new Kemist.Entity(
           [100, 200],
-          new Kemist.Sprite('images/toucan2.png', [0, 0], [310, 308], 16, [0,1,2,3,4,5,6,7,8,9,10,11,12]),
+          new Kemist.Sprite('images/toucan2.png', [0, 0], [310, 308], 16, [0]),
           {type: 'player', v: 0}
   );
 
@@ -581,7 +581,32 @@ Choco.handleInput = function (dt) {
   }
 
   var move_speed = 0;
+  Choco.upPressed = false;
+  Choco.downPressed = false;
 
+  if (Choco.player.pos[1] > -70 && (Kemist.Input.isDown('UP') || Kemist.Input.isDown('w'))) {
+    move_speed = Math.round(Choco.playerSpeed * dt);
+    Choco.player.pos[1] -= move_speed;
+    Choco.player.params.v = 0;
+    Choco.upPressed = true;
+  }
+
+
+  if (Choco.player.pos[1] < 520 && (Kemist.Input.isDown('DOWN') || Kemist.Input.isDown('s'))) {
+    move_speed = Math.round(Choco.playerSpeed * dt);
+    Choco.player.pos[1] += move_speed;
+    Choco.player.params.v = 0;
+    Choco.downPressed = true;
+  }
+
+
+  if (Choco.upPressed) {
+    Choco.player.sprite.frames = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
+    ;
+  } else {
+    Choco.player.sprite.frames = [0];
+    ;
+  }
 
 };
 
@@ -673,18 +698,18 @@ Choco.updateEntities = function (dt) {
         obj.pos[0] -= speed;
       }
     }
-    
-    if (Choco.mountain_objects.length < 2){
+
+    if (Choco.mountain_objects.length < 2) {
       var pos = Choco.level_type == 'day' ? [0, 211] : [646, 211];
       var mountain1 = new Kemist.Entity(
-              [Kemist.getRandomInt(1300,1500), 246],
+              [Kemist.getRandomInt(1300, 1500), 246],
               new Kemist.Sprite('images/terrain.png', pos, [646, 400]),
               {type: 'mountain'}
       );
 
       Choco.mountain_objects.push(mountain1);
     }
-    
+
     // Move tree objects
     for (var i = 0; i < Choco.tree_objects.length; i++) {
       var obj = Choco.tree_objects[i];
@@ -698,29 +723,27 @@ Choco.updateEntities = function (dt) {
         obj.pos[0] -= speed;
       }
     }
-    
-    if (Choco.tree_objects.length < 3){
-      Choco.createTree(Kemist.getRandomInt(1300,1500));
+
+    if (Choco.tree_objects.length < 3) {
+      Choco.createTree(Kemist.getRandomInt(1300, 1500));
     }
-    
-    
-    if (Choco.player.pos[1] < 520){
-      Choco.player.params.v+=Choco.gravity;
-      Choco.player.pos[1]+=(Choco.player.params.v/2);
+
+
+    if (!Choco.upPressed && Choco.player.pos[1] < 520) {
+      Choco.player.params.v += Choco.gravity;
+      Choco.player.pos[1] += (Choco.player.params.v / 2);
     }
-    
-    
+
+
     Choco.player.sprite.update(dt);
   }
-  
-  
 
 
 
   if (Choco.debug) {
 //    $('#debug').html('Clouds: ' + Choco.cloud_objects.length + ', tree objects: ' + Choco.tree_objects.length+', mountain objects: ' + Choco.mountain_objects.length);
 //    $('#debug').html('Distance: ' + Choco.distance + '/' + Choco.levelDistances[Choco.game.level] + ', stones: ' + Choco.stone_objects.length + ', gifts:' + Choco.gift_objects.length + ', background objects: ' + Choco.background_objects.length);
-    $('#debug').html('Player: ' + Choco.player.pos[0] + ',' + Choco.player.pos[1]);
+    $('#debug').html('Up: ' + Choco.upPressed + ', down:' + Choco.downPressed);
   }
 };
 
@@ -796,7 +819,7 @@ Choco.renderGame = function (game) {
   game.renderEntities(Choco.mountain_objects);
   game.renderEntities(Choco.tree_objects);
   game.renderEntities(Choco.ground_objects);
-  
+
   // Render the player if the game isn't over
   if (!game.isGameOver) {
     Choco.game.renderEntity(Choco.player);
