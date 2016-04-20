@@ -53,7 +53,7 @@ Choco.imageResources = [
   "images/intro.png", "images/intro_background.png", "images/logos.png", "images/Museo900.png", "images/pickups.png",
   "images/planes.png", "images/terrain.png", "images/Toonish1.png", "images/Toonish2.png", "images/Toonish3.png",
   "images/Toonish4.png", "images/totem.png", "images/toucanFrames.png", "images/trees.png", "images/tutorial.png",
-  "images/uielements.png", "images/bg_night.png", "images/start_hazisweets.png", "images/toucan2.png"
+  "images/ui_elements.png", "images/bg_night.png", "images/start_hazisweets.png", "images/toucan2.png"
 ]
         ;
 
