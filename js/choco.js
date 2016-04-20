@@ -585,7 +585,7 @@ Choco.handleInput = function (dt) {
   Choco.downPressed = false;
 
   if (Kemist.Input.isDown('UP') || Kemist.Input.isDown('w')) {
-    if (Choco.player.pos[1] > -70){
+    if (Choco.player.pos[1] > 60){
       move_speed = Choco.playerSpeed * dt;
       Choco.player.pos[1] -= move_speed;
     }
