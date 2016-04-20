@@ -683,7 +683,7 @@ Choco.updateEntities = function (dt) {
         }
 
       } else {
-        obj.pos[0] -= Choco.gameSpeed / 3;
+        obj.pos[0] -= Choco.gameSpeed / 2;
       }
     }
 
@@ -715,7 +715,7 @@ Choco.updateEntities = function (dt) {
     // Move tree objects
     for (var i = 0; i < Choco.tree_objects.length; i++) {
       var obj = Choco.tree_objects[i];
-      var speed = Choco.gameSpeed / 3;
+      var speed = Choco.gameSpeed / 2;
 
       if (obj.pos[0] <= (obj.sprite.size[0] * -1)) {
         Choco.tree_objects.splice(i, 1);

@@ -348,6 +348,15 @@ progress{
   bottom: 0;
 }
 
+#score-box{
+  background: url('../images/uielements.png') 0% 0% no-repeat;
+  width: 453px;
+  height: 141px;
+  position: absolute;
+  z-index: 9999;
+  border: 1px solid #000;
+}
+
 
 @keyframes cloud
 {
