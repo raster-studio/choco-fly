@@ -61,6 +61,33 @@ Kemist.shuffle = function(o) {
 	return o;
 };
 
+
+/**
+ * Shuffles an array
+ * 
+ * @param {Array}
+ * 
+ * @returns {Array}
+ */
+Kemist.shuffleWeighted = function(o,w) {
+  var total_weight = w.reduce(function (prev, cur, i, arr) {
+      return prev + cur;
+  });  
+
+  var random_num = Math.random() * (total_weight - 0) + 0;
+  var weight_sum = 0;
+
+  for (var i = 0; i < o.length; i++) {
+      weight_sum += w[i];
+      weight_sum = +weight_sum.toFixed(2);
+
+      if (random_num <= weight_sum) {
+          return o[i];
+      }
+  }
+     
+};
+
 /**
  * Gets a random integer in given range
  * 
@@ -516,7 +543,14 @@ Kemist.Audio = {
 };
 
 
-
+/**
+ * Entity object
+ * 
+ * @param Array pos
+ * @param Kemist.Sprite sprite
+ * @param {} params
+ * @returns {Kemist.Entity}
+ */
 Kemist.Entity = function(pos, sprite, params){
   this.pos = pos;
   this.sprite = sprite;

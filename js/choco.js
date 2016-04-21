@@ -155,6 +155,36 @@ Choco.planes = {
 
 
 
+Choco.pickups = {
+  
+  1: {
+    img: 'images/pickups.png',
+    size: [73, 86, 0, 0],
+    score: 100
+  },
+  
+  
+  2: {
+    img: 'images/pickups.png',
+    size: [80, 80, 152, 0],
+    score: 200
+  },
+  
+  3: {
+    img: 'images/pickups.png',
+    size: [61, 92, 0, 86],
+    score: 600
+  },
+  
+  4: {
+    img: 'images/pickups.png',
+    size: [80, 76, 73, 0],
+    score: 1000
+  },
+};
+
+
+
 Choco.background = {
   day: 'images/bg_day.png',
   night: 'images/bg_night.png'
@@ -168,6 +198,7 @@ Choco.mountain_objects = [];
 Choco.ground_objects = [];
 Choco.background_objects = [];
 Choco.enemy_objects = [];
+Choco.pickup_objects = [];
 Choco.finish = null;
 
 
@@ -498,6 +529,33 @@ Choco.createEnemy = function () {
 };
 
 
+
+Choco.createPickup = function () { 
+  var index=Kemist.shuffleWeighted([1,2,3,4],[0.5,0.2,0.15,0.05]);
+  var item = Choco.pickups[index];
+  
+  var i = 0;
+  var pos;
+  var same = true;
+  while (same) {
+    if (i > Choco.boundTrialThreshold) {
+      return;
+    }
+    pos = [Kemist.getRandomInt(1200, 1700), Kemist.getRandomInt(200, 400)];
+    same = Choco.checkConflicts(pos[0], pos[1], item.size, Choco.pickup_objects);
+    i++;
+  }
+
+
+  var obj = new Kemist.Entity(
+          pos,
+          new Kemist.Sprite(item.img, [item.size[2], item.size[3]], [item.size[0], item.size[1]])
+          );
+
+  Choco.pickup_objects.push(obj);
+};
+
+
 /**
  * Creates a random object
  * 
@@ -529,7 +587,13 @@ Choco.createRandomObject = function (pos, params, container) {
  * Clears all objects from screen
  */
 Choco.clearObjects = function () {
+  Choco.cloud_objects = [];
+  Choco.tree_objects = [];
+  Choco.mountain_objects = [];
+  Choco.ground_objects = [];
   Choco.background_objects = [];
+  Choco.enemy_objects = [];
+  Choco.pickup_objects = [];  
 };
 
 
@@ -806,6 +870,24 @@ Choco.updateEntities = function (dt) {
     if (Choco.enemy_objects.length < 1) {
       Choco.createEnemy();
     }
+    
+    
+    // Pickups
+    for (var i = 0; i < Choco.pickup_objects.length; i++) {
+      var obj = Choco.pickup_objects[i];
+      var speed = Choco.gameSpeed / 2;
+
+      if (obj.pos[0] <= (obj.sprite.size[0] * -1)) {
+        Choco.pickup_objects.splice(i, 1);
+        i--;
+        continue;
+      } else {
+        obj.pos[0] -= speed;
+      }
+    }    
+    if (Choco.pickup_objects.length < 14) {
+      Choco.createPickup();
+    }
   }
 
 
@@ -889,6 +971,7 @@ Choco.renderGame = function (game) {
   game.renderEntities(Choco.mountain_objects);
   game.renderEntities(Choco.tree_objects);
   game.renderEntities(Choco.ground_objects);
+  game.renderEntities(Choco.pickup_objects);
 
   // Render the player if the game isn't over
   if (!game.isGameOver) {
