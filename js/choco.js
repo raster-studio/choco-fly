@@ -876,9 +876,9 @@ Choco.updateEntities = function (dt) {
           &&
           !Choco.died
           &&
-          Kemist.boxCollides([obj.pos[0],obj.pos[1]],[obj.sprite.size[0],obj.sprite.size[1]],[Choco.player.pos[0]+Choco.player.sprite.size[0]/3,Choco.player.pos[1]+Choco.player.sprite.size[1]/4],[Choco.player.sprite.size[0]/2,Choco.player.sprite.size[1]/3])
+          Kemist.boxCollides([obj.pos[0]*1.05,obj.pos[1]*1.05],[obj.sprite.size[0]*.85,obj.sprite.size[1]*.85],[Choco.player.pos[0]+Choco.player.sprite.size[0]/3,Choco.player.pos[1]+Choco.player.sprite.size[1]/4],[Choco.player.sprite.size[0]/2,Choco.player.sprite.size[1]/3])
         ){
-        Choco.game.ctx.strokeRect(obj.pos[0],obj.pos[1],obj.sprite.size[0],obj.sprite.size[1]);
+        Choco.game.ctx.strokeRect(obj.pos[0]*1.05,obj.pos[1]*1.05,obj.sprite.size[0]*.85,obj.sprite.size[1]*.85);
         Choco.game.ctx.strokeRect(Choco.player.pos[0]+Choco.player.sprite.size[0]/3,Choco.player.pos[1]+Choco.player.sprite.size[1]/4,Choco.player.sprite.size[0]/2,Choco.player.sprite.size[1]/3);
         Choco.die();
       }
