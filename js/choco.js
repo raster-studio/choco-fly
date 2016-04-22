@@ -141,12 +141,10 @@ Choco.trees = {
 
 
 Choco.planes = {
-  
   1: {
     img: 'images/planes.png',
     size: [273, 186, 0, 0]
   },
-  
   2: {
     img: 'images/planes.png',
     size: [273, 186, 0, 186]
@@ -156,26 +154,20 @@ Choco.planes = {
 
 
 Choco.pickups = {
-  
   1: {
     img: 'images/pickups.png',
     size: [73, 86, 0, 0],
-    score: 100
-  },
-  
-  
+    score: 100 },
   2: {
     img: 'images/pickups.png',
     size: [80, 80, 152, 0],
     score: 200
   },
-  
   3: {
     img: 'images/pickups.png',
     size: [61, 92, 0, 86],
     score: 600
   },
-  
   4: {
     img: 'images/pickups.png',
     size: [80, 76, 73, 0],
@@ -530,10 +522,10 @@ Choco.createEnemy = function () {
 
 
 
-Choco.createPickup = function () { 
-  var index=Kemist.shuffleWeighted([1,2,3,4],[0.5,0.2,0.15,0.05]);
+Choco.createPickup = function () {
+  var index = Kemist.shuffleWeighted([1, 2, 3, 4], [0.5, 0.2, 0.15, 0.05]);
   var item = Choco.pickups[index];
-  
+
   var i = 0;
   var pos;
   var same = true;
@@ -593,7 +585,7 @@ Choco.clearObjects = function () {
   Choco.ground_objects = [];
   Choco.background_objects = [];
   Choco.enemy_objects = [];
-  Choco.pickup_objects = [];  
+  Choco.pickup_objects = [];
 };
 
 
@@ -855,10 +847,10 @@ Choco.updateEntities = function (dt) {
 
 
     // Enemies
-    var die=false;
+    var die = false;
     for (var i = 0; i < Choco.enemy_objects.length; i++) {
       var obj = Choco.enemy_objects[i];
-      var speed = Choco.gameSpeed ;
+      var speed = Choco.gameSpeed;
 
       if (obj.pos[0] <= (obj.sprite.size[0] * -1)) {
         Choco.enemy_objects.splice(i, 1);
@@ -867,28 +859,28 @@ Choco.updateEntities = function (dt) {
       } else {
         obj.pos[0] -= speed;
       }
-      
-      
-      
-      if (!Choco.immortal 
-          &&
-          Choco.dieCounter<1
-          &&
-          !Choco.died
-          &&
-          Kemist.boxCollides([obj.pos[0]*1.05,obj.pos[1]*1.05],[obj.sprite.size[0]*.85,obj.sprite.size[1]*.85],[Choco.player.pos[0]+Choco.player.sprite.size[0]/3,Choco.player.pos[1]+Choco.player.sprite.size[1]/4],[Choco.player.sprite.size[0]/2,Choco.player.sprite.size[1]/3])
-        ){
-        Choco.game.ctx.strokeRect(obj.pos[0]*1.05,obj.pos[1]*1.05,obj.sprite.size[0]*.85,obj.sprite.size[1]*.85);
-        Choco.game.ctx.strokeRect(Choco.player.pos[0]+Choco.player.sprite.size[0]/3,Choco.player.pos[1]+Choco.player.sprite.size[1]/4,Choco.player.sprite.size[0]/2,Choco.player.sprite.size[1]/3);
+
+
+
+      if (!Choco.immortal
+              &&
+              Choco.dieCounter < 1
+              &&
+              !Choco.died
+              &&
+              Kemist.boxCollides([obj.pos[0] * 1.05, obj.pos[1] * 1.05], [obj.sprite.size[0] * .85, obj.sprite.size[1] * .85], [Choco.player.pos[0] + Choco.player.sprite.size[0] / 3, Choco.player.pos[1] + Choco.player.sprite.size[1] / 4], [Choco.player.sprite.size[0] / 2, Choco.player.sprite.size[1] / 3])
+              ) {
+        Choco.game.ctx.strokeRect(obj.pos[0] * 1.05, obj.pos[1] * 1.05, obj.sprite.size[0] * .85, obj.sprite.size[1] * .85);
+        Choco.game.ctx.strokeRect(Choco.player.pos[0] + Choco.player.sprite.size[0] / 3, Choco.player.pos[1] + Choco.player.sprite.size[1] / 4, Choco.player.sprite.size[0] / 2, Choco.player.sprite.size[1] / 3);
         Choco.die();
       }
-      
-    }    
+
+    }
     if (Choco.enemy_objects.length < 1) {
       Choco.createEnemy();
     }
-    
-    
+
+
     // Pickups
     for (var i = 0; i < Choco.pickup_objects.length; i++) {
       var obj = Choco.pickup_objects[i];
@@ -901,19 +893,44 @@ Choco.updateEntities = function (dt) {
       } else {
         obj.pos[0] -= speed;
       }
-    }    
+
+      // Check gift taking
+      if (Choco.dieCounter < 1
+              &&
+              obj.scored != true
+              &&
+              !Choco.died
+              &&
+              obj.collidesTo(Choco.player)
+              ) {
+        var points = 0, gift;
+        for (var index in Choco.pickups) {
+          gift = Choco.pickups[index];
+          if (gift.img === obj.sprite.url) {
+            points = gift.score;
+            break;
+          }
+        }
+        Choco.game.score += points;
+//        Choco.playSound('gift', 0.5);
+        Choco.drawScore();
+        Choco.log('Collision to a gift, scored ' + points + '.');
+        obj.scored = true;
+//        obj.sprite = new Kemist.Sprite('images/score' + points.toString() + '.png', [0, 0], [49, 29]);
+      }
+    }
     if (Choco.pickup_objects.length < 4) {
       Choco.createPickup();
     }
   }
 
-  
+
 
 
   if (Choco.debug) {
 //    $('#debug').html('Clouds: ' + Choco.cloud_objects.length + ', tree objects: ' + Choco.tree_objects.length+', mountain objects: ' + Choco.mountain_objects.length);
 //    $('#debug').html('Distance: ' + Choco.distance + '/' + Choco.levelDistances[Choco.game.level] + ', stones: ' + Choco.stone_objects.length + ', gifts:' + Choco.gift_objects.length + ', background objects: ' + Choco.background_objects.length);
-    $('#debug').html('Player: ' + Choco.player.pos[0]+','+Choco.player.pos[1]);
+    $('#debug').html('Player: ' + Choco.player.pos[0] + ',' + Choco.player.pos[1]);
   }
 };
 
