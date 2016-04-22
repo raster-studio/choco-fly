@@ -541,7 +541,7 @@ Choco.createPickup = function () {
     if (i > Choco.boundTrialThreshold) {
       return;
     }
-    pos = [Kemist.getRandomInt(1200, 1700), Kemist.getRandomInt(200, 400)];
+    pos = [Kemist.getRandomInt(1200, 1900), Kemist.getRandomInt(200, 400)];
     same = Choco.checkConflicts(pos[0], pos[1], item.size, Choco.pickup_objects);
     i++;
   }
@@ -855,6 +855,7 @@ Choco.updateEntities = function (dt) {
 
 
     // Enemies
+    var die=false;
     for (var i = 0; i < Choco.enemy_objects.length; i++) {
       var obj = Choco.enemy_objects[i];
       var speed = Choco.gameSpeed ;
@@ -866,6 +867,22 @@ Choco.updateEntities = function (dt) {
       } else {
         obj.pos[0] -= speed;
       }
+      
+      
+      
+      if (!Choco.immortal 
+          &&
+          Choco.dieCounter<1
+          &&
+          !Choco.died
+          &&
+          Kemist.boxCollides([obj.pos[0],obj.pos[1]],[obj.sprite.size[0],obj.sprite.size[1]],[Choco.player.pos[0]+Choco.player.sprite.size[0]/3,Choco.player.pos[1]+Choco.player.sprite.size[1]/4],[Choco.player.sprite.size[0]/2,Choco.player.sprite.size[1]/3])
+        ){
+        Choco.game.ctx.strokeRect(obj.pos[0],obj.pos[1],obj.sprite.size[0],obj.sprite.size[1]);
+        Choco.game.ctx.strokeRect(Choco.player.pos[0]+Choco.player.sprite.size[0]/3,Choco.player.pos[1]+Choco.player.sprite.size[1]/4,Choco.player.sprite.size[0]/2,Choco.player.sprite.size[1]/3);
+        Choco.die();
+      }
+      
     }    
     if (Choco.enemy_objects.length < 1) {
       Choco.createEnemy();
@@ -885,17 +902,18 @@ Choco.updateEntities = function (dt) {
         obj.pos[0] -= speed;
       }
     }    
-    if (Choco.pickup_objects.length < 14) {
+    if (Choco.pickup_objects.length < 4) {
       Choco.createPickup();
     }
   }
 
+  
 
 
   if (Choco.debug) {
 //    $('#debug').html('Clouds: ' + Choco.cloud_objects.length + ', tree objects: ' + Choco.tree_objects.length+', mountain objects: ' + Choco.mountain_objects.length);
 //    $('#debug').html('Distance: ' + Choco.distance + '/' + Choco.levelDistances[Choco.game.level] + ', stones: ' + Choco.stone_objects.length + ', gifts:' + Choco.gift_objects.length + ', background objects: ' + Choco.background_objects.length);
-    $('#debug').html('Up: ' + Choco.upPressed + ', down:' + Choco.downPressed);
+    $('#debug').html('Player: ' + Choco.player.pos[0]+','+Choco.player.pos[1]);
   }
 };
 
