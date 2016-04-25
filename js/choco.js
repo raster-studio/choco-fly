@@ -650,8 +650,8 @@ Choco.die = function () {
   Choco.drawLives();
   Choco.died = true;
   if (!Choco.game.isGameOver) {
-    Choco.pausing = 50;
-    Choco.dieCounter = 250;
+    Choco.pausing = 1;
+    Choco.dieCounter = 400;
   }
 
   
@@ -757,9 +757,9 @@ Choco.updateEntities = function (dt) {
   if (Choco.dieCounter > 0) {
     Choco.dieCounter -= 5;
     if (Choco.dieCounter % 50 < 20) {
-      Choco.player.pos[0] = -300;
-    } else {
       Choco.player.pos[0] = 100;
+    } else {
+      Choco.player.pos[0] = -300;
     }
   } else if (!Choco.spawningIn && !Choco.finishing) {
     Choco.player.pos[0] = 100;
@@ -884,8 +884,8 @@ Choco.updateEntities = function (dt) {
               &&
               Kemist.boxCollides([obj.pos[0] * 1.05, obj.pos[1] * 1.05], [obj.sprite.size[0] * .85, obj.sprite.size[1] * .85], [Choco.player.pos[0] + Choco.player.sprite.size[0] / 3, Choco.player.pos[1] + Choco.player.sprite.size[1] / 4], [Choco.player.sprite.size[0] / 2, Choco.player.sprite.size[1] / 3])
               ) {
-        Choco.game.ctx.strokeRect(obj.pos[0] * 1.05, obj.pos[1] * 1.05, obj.sprite.size[0] * .85, obj.sprite.size[1] * .85);
-        Choco.game.ctx.strokeRect(Choco.player.pos[0] + Choco.player.sprite.size[0] / 3, Choco.player.pos[1] + Choco.player.sprite.size[1] / 4, Choco.player.sprite.size[0] / 2, Choco.player.sprite.size[1] / 3);
+        //Choco.game.ctx.strokeRect(obj.pos[0] * 1.05, obj.pos[1] * 1.05, obj.sprite.size[0] * .85, obj.sprite.size[1] * .85);
+        //Choco.game.ctx.strokeRect(Choco.player.pos[0] + Choco.player.sprite.size[0] / 3, Choco.player.pos[1] + Choco.player.sprite.size[1] / 4, Choco.player.sprite.size[0] / 2, Choco.player.sprite.size[1] / 3);
         Choco.die();
       }
 
