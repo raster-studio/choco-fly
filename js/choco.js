@@ -28,6 +28,7 @@ Choco.chooseAnimFinished = false;
 Choco.animFrameRequested = false;
 Choco.upPressed = false;
 Choco.downPressed = false;
+Choco.spawningIn = true;
 
 Choco.skipReady = true;
 Choco.skipIntro = false;
@@ -53,7 +54,7 @@ Choco.imageResources = [
   "images/intro.png", "images/intro_background.png", "images/logos.png", "images/Museo900.png", "images/pickups.png",
   "images/planes.png", "images/terrain.png", "images/Toonish1.png", "images/Toonish2.png", "images/Toonish3.png",
   "images/Toonish4.png", "images/totem.png", "images/toucanFrames.png", "images/trees.png", "images/tutorial.png",
-  "images/ui_elements.png", "images/bg_night.png", "images/start_hazisweets.png", "images/toucan2.png"
+  "images/ui_elements.png", "images/bg_night.png", "images/start_hazisweets.png", "images/toucan2.png", "images/scores.png"
 ]
         ;
 
@@ -173,6 +174,27 @@ Choco.pickups = {
     size: [80, 76, 73, 0],
     score: 1000
   },
+};
+
+
+
+Choco.scores = {
+  100: {
+    size: [63,26],
+    offset: [0,0]
+  },
+  200: {
+    size: [66,26],
+    offset: [63,0]
+  },
+  600: {
+    size: [64,26],
+    offset: [130,0]
+  },
+  1000: {
+    size: [86,26],
+    offset: [194,0]
+  }
 };
 
 
@@ -541,7 +563,8 @@ Choco.createPickup = function () {
 
   var obj = new Kemist.Entity(
           pos,
-          new Kemist.Sprite(item.img, [item.size[2], item.size[3]], [item.size[0], item.size[1]])
+          new Kemist.Sprite(item.img, [item.size[2], item.size[3]], [item.size[0], item.size[1]]),
+          {score:item.score}
           );
 
   Choco.pickup_objects.push(obj);
@@ -631,18 +654,7 @@ Choco.die = function () {
     Choco.dieCounter = 250;
   }
 
-  Choco.explosions.push(new Kemist.Entity(
-          [Choco.player.pos[0] + 0, Choco.player.pos[1] + 0],
-          new Kemist.Sprite('images/explosion2.png',
-                  [22, 0],
-                  [103, 103],
-                  16,
-                  [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
-                  null,
-                  true),
-          {type: 'explosion'}
-  ));
-  Choco.player.pos = [-200, -200];
+  
 };
 
 
@@ -685,7 +697,7 @@ Choco.handleInput = function (dt) {
   Choco.upPressed = false;
   Choco.downPressed = false;
 
-  if (Kemist.Input.isDown('UP') || Kemist.Input.isDown('w')) {
+  if (!Choco.spawningIn && (Kemist.Input.isDown('UP') || Kemist.Input.isDown('w'))) {
     if (Choco.player.pos[1] > 60) {
       move_speed = Choco.playerSpeed * dt;
       Choco.player.pos[1] -= move_speed;
@@ -695,7 +707,7 @@ Choco.handleInput = function (dt) {
   }
 
 
-  if (Choco.player.pos[1] < 520 && (Kemist.Input.isDown('DOWN') || Kemist.Input.isDown('s'))) {
+  if (!Choco.spawningIn && Choco.player.pos[1] < 520 && (Kemist.Input.isDown('DOWN') || Kemist.Input.isDown('s'))) {
     move_speed = Choco.playerSpeed * dt * 2;
     Choco.player.pos[1] += move_speed;
     Choco.player.params.v = 0;
@@ -734,7 +746,7 @@ Choco.updateEntities = function (dt) {
   if (Choco.pausing > 0) {
     Choco.pausing--;
     if (Choco.pausing == 0 && Choco.died) {
-      Choco.player.pos = [470, 200];
+      //Choco.player.pos = [470, 200];
       Choco.died = false;
     }
     return;
@@ -745,12 +757,12 @@ Choco.updateEntities = function (dt) {
   if (Choco.dieCounter > 0) {
     Choco.dieCounter -= 5;
     if (Choco.dieCounter % 50 < 20) {
-      Choco.player.pos[1] = -200;
+      Choco.player.pos[0] = -300;
     } else {
-      Choco.player.pos[1] = 200;
+      Choco.player.pos[0] = 100;
     }
-  } else if (!Choco.finishing) {
-    //Choco.player.pos[1] = 200;
+  } else if (!Choco.spawningIn && !Choco.finishing) {
+    Choco.player.pos[0] = 100;
   }
 
 
@@ -833,10 +845,12 @@ Choco.updateEntities = function (dt) {
 
 
     // Player    
-    if (Choco.player.pos[0] < 100) {
+    if (Choco.dieCounter==0 && Choco.player.pos[0] < 100) {
+      Choco.spawningIn=true;
       Choco.player.pos[0] += Choco.gameSpeed;
       Choco.player.sprite.frames = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
     } else if (!Choco.upPressed && Choco.player.pos[1] < 520) {
+      Choco.spawningIn=false;
       Choco.player.params.v += Choco.gravity;
       Choco.player.pos[1] += (Choco.player.params.v / 2);
       Choco.player.sprite.frames = [0];
@@ -884,7 +898,7 @@ Choco.updateEntities = function (dt) {
     // Pickups
     for (var i = 0; i < Choco.pickup_objects.length; i++) {
       var obj = Choco.pickup_objects[i];
-      var speed = Choco.gameSpeed / 2;
+      var speed = obj.scored ? Choco.gameSpeed / 3 : Choco.gameSpeed / 2;
 
       if (obj.pos[0] <= (obj.sprite.size[0] * -1)) {
         Choco.pickup_objects.splice(i, 1);
@@ -892,6 +906,9 @@ Choco.updateEntities = function (dt) {
         continue;
       } else {
         obj.pos[0] -= speed;
+        if (obj.scored){
+          obj.pos[1] -= Choco.gameSpeed / 16;
+        }
       }
 
       // Check gift taking
@@ -901,22 +918,15 @@ Choco.updateEntities = function (dt) {
               &&
               !Choco.died
               &&
-              obj.collidesTo(Choco.player)
+              obj.collidesTo(Choco.player,20)
               ) {
-        var points = 0, gift;
-        for (var index in Choco.pickups) {
-          gift = Choco.pickups[index];
-          if (gift.img === obj.sprite.url) {
-            points = gift.score;
-            break;
-          }
-        }
+        var points = obj.params.score;
         Choco.game.score += points;
 //        Choco.playSound('gift', 0.5);
         Choco.drawScore();
         Choco.log('Collision to a gift, scored ' + points + '.');
         obj.scored = true;
-//        obj.sprite = new Kemist.Sprite('images/score' + points.toString() + '.png', [0, 0], [49, 29]);
+        obj.sprite = new Kemist.Sprite('images/scores.png', Choco.scores[points].offset, Choco.scores[points].size);
       }
     }
     if (Choco.pickup_objects.length < 4) {
@@ -930,7 +940,7 @@ Choco.updateEntities = function (dt) {
   if (Choco.debug) {
 //    $('#debug').html('Clouds: ' + Choco.cloud_objects.length + ', tree objects: ' + Choco.tree_objects.length+', mountain objects: ' + Choco.mountain_objects.length);
 //    $('#debug').html('Distance: ' + Choco.distance + '/' + Choco.levelDistances[Choco.game.level] + ', stones: ' + Choco.stone_objects.length + ', gifts:' + Choco.gift_objects.length + ', background objects: ' + Choco.background_objects.length);
-    $('#debug').html('Player: ' + Choco.player.pos[0] + ',' + Choco.player.pos[1]);
+    $('#debug').html('Player: ' + Choco.player.pos[0] + ',' + Choco.player.pos[1]+', Die counter:'+Choco.dieCounter);
   }
 };
 

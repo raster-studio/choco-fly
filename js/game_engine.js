@@ -559,7 +559,16 @@ Kemist.Entity = function(pos, sprite, params){
 
 Kemist.Entity.prototype = {
   
-  collidesTo: function(entity){
+  collidesTo: function(entity,tolerance){
+    if (typeof tolerance !== 'undefined'){
+      tolerance=parseInt(tolerance)/100;
+      return Kemist.boxCollides(
+        [this.pos[0]*(1+tolerance),this.pos[1]*(1+tolerance)],
+        [this.sprite.size[0]*(1-tolerance),this.sprite.size[1]*(1-tolerance)],
+        [entity.pos[0]*(1+tolerance),entity.pos[1]*(1+tolerance)],
+        [entity.sprite.size[0]*(1-tolerance),entity.sprite.size[1]*(1-tolerance)]
+      );
+    }
     return Kemist.boxCollides(this.pos,this.sprite.size,entity.pos,entity.sprite.size);
   }
 };
