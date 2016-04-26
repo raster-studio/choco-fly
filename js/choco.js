@@ -10,7 +10,7 @@ var Choco = Choco || {};
 Choco.screen = 'game';
 
 Choco.pausing = 0;
-Choco.gameSpeed = 4;
+Choco.gameSpeed = 6;
 Choco.playerSpeed = 300;
 Choco.distance = 0;
 Choco.trailCounter = 0;
@@ -18,7 +18,7 @@ Choco.dieCounter = 0;
 Choco.boundThreshold = 100;
 Choco.boundTrialThreshold = 5000;
 
-Choco.gravity = 0.5;
+Choco.gravity = 0.25;
 
 Choco.lastDir = null;
 Choco.died = false;
@@ -400,7 +400,7 @@ Choco.resetGame = function () {
 
   Choco.highScoreReached = false;
   Choco.isPaused = false;
-  Choco.gameSpeed = 4;
+  Choco.gameSpeed = 6;
   Choco.playerSpeed = 300;
   Choco.died = false;
 };
@@ -648,7 +648,7 @@ Choco.startLevel = function () {
   Choco.drawLives();
   Choco.drawScore();
 
-  Choco.gameSpeed = Math.round(Choco.game.level * 0.7) + 4;
+  Choco.gameSpeed = Math.round(Choco.game.level * 0.7) + 6;
   Choco.playerSpeed = Math.round(Choco.gameSpeed * 75);
   Choco.distance = 0;
 
