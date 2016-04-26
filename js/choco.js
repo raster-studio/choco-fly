@@ -161,7 +161,7 @@ Choco.pickups = {
     score: 100},
   2: {
     img: 'images/pickups.png',
-    size: [80, 80, 152, 0],
+    size: [80, 80, 153, 0],
     score: 200
   },
   3: {
@@ -715,38 +715,32 @@ Choco.update = function (dt) {
  * 
  */
 Choco.handleInput = function (dt) {
-  if (Choco.pausing > 0 || Choco.finishing === true) {
+  if (Choco.spawningIn || Choco.pausing > 0 || Choco.finishing === true) {
     return;
   }
 
   var move_speed = 0;
-  Choco.upPressed = false;
   Choco.downPressed = false;
 
-  if (!Choco.spawningIn && (Kemist.Input.isDown('UP') || Kemist.Input.isDown('w'))) {
-    if (Choco.player.pos[1] > 60) {
-      move_speed = Choco.playerSpeed * dt;
-      Choco.player.pos[1] -= move_speed;
-    }
-    Choco.player.params.v = 0;
+  if ((Choco.player.params.v >= -5 || Choco.player.pos[1] >=520 ) && Choco.player.pos[1] > 60 && (Kemist.Input.isDown('UP') || Kemist.Input.isDown('w'))) {
+    Choco.player.params.v = -12;
     Choco.upPressed = true;
   }
 
 
-  if (!Choco.spawningIn && Choco.player.pos[1] < 520 && (Kemist.Input.isDown('DOWN') || Kemist.Input.isDown('s'))) {
+  if (Choco.player.pos[1] < 520 && (Kemist.Input.isDown('DOWN') || Kemist.Input.isDown('s'))) {
     move_speed = Choco.playerSpeed * dt * 2;
     Choco.player.pos[1] += move_speed;
     Choco.player.params.v = 0;
     Choco.downPressed = true;
+    Choco.upPressed = false;
   }
 
 
   if (Choco.upPressed) {
     Choco.player.sprite.frames = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
-    ;
   } else {
     Choco.player.sprite.frames = [0];
-    ;
   }
 
 };
@@ -875,16 +869,25 @@ Choco.updateEntities = function (dt) {
       Choco.spawningIn = true;
       Choco.player.pos[0] += Choco.gameSpeed;
       Choco.player.sprite.frames = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
-    } else if (!Choco.upPressed && Choco.player.pos[1] < 520) {
+    } else if (Choco.player.pos[1] < 520 || (Choco.dieCounter > 0 && Choco.upPressed)) {
       Choco.spawningIn = false;
       Choco.player.params.v += Choco.gravity;
       Choco.player.pos[1] += (Choco.player.params.v / 2);
-      Choco.player.sprite.frames = [0];
+    }else if (Choco.player.pos[1] >= 520
+              &&
+              !Choco.immortal
+              &&
+              Choco.dieCounter < 1
+              &&
+              !Choco.died){
+      Choco.die();
+    }        
+    
+    if (Choco.upPressed && Choco.player.params.v > 0){
+      Choco.upPressed=false;
     }
 
-
     Choco.player.sprite.update(dt);
-
 
     // Enemies
     var die = false;
@@ -1003,7 +1006,7 @@ Choco.updateEntities = function (dt) {
   if (Choco.debug) {
 //    $('#debug').html('Clouds: ' + Choco.cloud_objects.length + ', tree objects: ' + Choco.tree_objects.length+', mountain objects: ' + Choco.mountain_objects.length);
 //    $('#debug').html('Distance: ' + Choco.distance + '/' + Choco.levelDistances[Choco.game.level] + ', stones: ' + Choco.stone_objects.length + ', gifts:' + Choco.gift_objects.length + ', background objects: ' + Choco.background_objects.length);
-    $('#debug').html('Player: ' + Choco.player.pos[0] + ',' + Choco.player.pos[1] + ', Die counter:' + Choco.dieCounter);
+//    $('#debug').html('Player: ' + Math.round(Choco.player.pos[0]) + ',' + Math.round(Choco.player.pos[1]) + ', velocity:' + Choco.player.params.v);
   }
 };
 
