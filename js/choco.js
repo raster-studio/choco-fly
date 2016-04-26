@@ -171,7 +171,7 @@ Choco.pickups = {
   },
   4: {
     img: 'images/pickups.png',
-    size: [80, 76, 73, 0],
+    size: [80, 76, 72, 0],
     score: 1000
   },
 };
