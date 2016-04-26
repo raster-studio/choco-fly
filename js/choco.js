@@ -656,7 +656,7 @@ Choco.startLevel = function () {
 
   Choco.player = new Kemist.Entity(
           [-300, 200],
-          new Kemist.Sprite('images/toucan2.png', [0, 0], [310, 308], 24, [0]),
+          new Kemist.Sprite('images/toucan2.png', [0, 0], [310, 308], 16, [0]),
           {type: 'player', v: 0}
   );
 
@@ -722,16 +722,16 @@ Choco.handleInput = function (dt) {
   var move_speed = 0;
   Choco.downPressed = false;
 
-  if ((Choco.player.params.v >= -5 || Choco.player.pos[1] >=520 ) && Choco.player.pos[1] > 60 && (Kemist.Input.isDown('UP') || Kemist.Input.isDown('w'))) {
-    Choco.player.params.v = -12;
+  if ((Choco.player.params.v >= -10 || Choco.player.pos[1] >=520 ) && Choco.player.pos[1] > 60 && (Kemist.Input.isDown('UP') || Kemist.Input.isDown('w'))) {
+    Choco.player.params.v = -14;
     Choco.upPressed = true;
   }
 
 
   if (Choco.player.pos[1] < 520 && (Kemist.Input.isDown('DOWN') || Kemist.Input.isDown('s'))) {
-    move_speed = Choco.playerSpeed * dt * 2;
-    Choco.player.pos[1] += move_speed;
-    Choco.player.params.v = 0;
+//    move_speed = Choco.playerSpeed * dt * 1.2;
+//    Choco.player.pos[1] += move_speed;
+    Choco.player.params.v+=1.5;
     Choco.downPressed = true;
     Choco.upPressed = false;
   }
