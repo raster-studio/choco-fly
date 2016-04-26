@@ -120,7 +120,7 @@ Choco.trees = {
             '3': {
               img: 'images/trees.png',
               size: [332, 302, 0, 708]
-            },
+            }
           },
   night:
           {
@@ -135,7 +135,7 @@ Choco.trees = {
             '3': {
               img: 'images/trees.png',
               size: [332, 302, 0, 405]
-            },
+            }
           }
 };
 
@@ -173,7 +173,7 @@ Choco.pickups = {
     img: 'images/pickups.png',
     size: [80, 76, 72, 0],
     score: 1000
-  },
+  }
 };
 
 
@@ -220,7 +220,7 @@ Choco.finish = null;
  * Draws active screen content
  */
 Choco.handleScreen = function () {
-  if (Choco.screenHandlerCalled == true) {
+  if (Choco.screenHandlerCalled === true) {
     return;
   }
   Choco.log('Screen handler called for ' + Choco.screen);
@@ -241,7 +241,7 @@ Choco.handleScreen = function () {
       tl2.add(TweenLite.fromTo('#screen-start #start_hazisweets', 0.75, {autoAlpha: 0, scale: 0}, {display: 'block', autoAlpha: 1, scale: 1, ease: "Expo.easeInOut"}), 'start');
       tl2.add(TweenLite.fromTo('#screen-start #start_logo', 0.75, {autoAlpha: 0, scale: 0, rotation: '360'}, {display: 'block', autoAlpha: 1, scale: 1, ease: "Expo.easeInOut", rotation: 0}), 'start+=0.3');
       tl2.add(TweenLite.fromTo('#screen-start #start_button', 0.75, {autoAlpha: 0, scale: 0, rotation: '-360'}, {display: 'block', autoAlpha: 1, scale: 1, ease: "Expo.easeInOut", rotation: 0}), 'start+=0.6');
-      if (Choco.switchScreenTimer == null) {
+      if (Choco.switchScreenTimer === null) {
         Choco.switchScreenTimer = setTimeout(Choco.initSwitchScreenTimer, Choco.screenSwitcherDelay);
       }
       break;
@@ -257,7 +257,7 @@ Choco.handleScreen = function () {
       break;
 
     case 'highscore':
-      if (Choco.switchScreenTimer == null) {
+      if (Choco.switchScreenTimer === null) {
         Choco.switchScreenTimer = setTimeout(Choco.initSwitchScreenTimer, Choco.screenSwitcherDelay);
       }
       Choco.getHighScores(function () {
@@ -319,9 +319,9 @@ Choco.switchScreen = function (screen) {
  */
 Choco.initSwitchScreenTimer = function () {
   if (!Choco.isPaused) {
-    if (Choco.screen == 'start') {
+    if (Choco.screen === 'start') {
       Choco.switchScreen('highscore');
-    } else if (Choco.screen == 'highscore' && !Choco.highScoreReached) {
+    } else if (Choco.screen === 'highscore' && !Choco.highScoreReached) {
       Choco.switchScreen('start');
     }
   }
