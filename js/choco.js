@@ -722,7 +722,7 @@ Choco.handleInput = function (dt) {
   var move_speed = 0;
   Choco.downPressed = false;
 
-  if ((Choco.player.params.v >= -4 || Choco.player.pos[1] >=520 ) && (Kemist.Input.isDown('UP') || Kemist.Input.isDown('w'))) {
+  if ((Choco.player.params.v >= -2 || Choco.player.pos[1] >=520 ) && Choco.player.pos[1] > 20 && (Kemist.Input.isDown('UP') || Kemist.Input.isDown('w'))) {
     Choco.player.params.v = -10;
     Choco.upPressed = true;
   }
