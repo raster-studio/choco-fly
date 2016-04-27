@@ -18,7 +18,7 @@ Choco.dieCounter = 0;
 Choco.boundThreshold = 100;
 Choco.boundTrialThreshold = 5000;
 
-Choco.gravity = 0.25;
+Choco.gravity = 0.5;
 
 Choco.lastDir = null;
 Choco.died = false;
@@ -722,8 +722,8 @@ Choco.handleInput = function (dt) {
   var move_speed = 0;
   Choco.downPressed = false;
 
-  if ((Choco.player.params.v >= -10 || Choco.player.pos[1] >=520 ) && Choco.player.pos[1] > 60 && (Kemist.Input.isDown('UP') || Kemist.Input.isDown('w'))) {
-    Choco.player.params.v = -14;
+  if ((Choco.player.params.v >= -4 || Choco.player.pos[1] >=520 ) && (Kemist.Input.isDown('UP') || Kemist.Input.isDown('w'))) {
+    Choco.player.params.v = -10;
     Choco.upPressed = true;
   }
 
@@ -873,6 +873,7 @@ Choco.updateEntities = function (dt) {
       Choco.spawningIn = false;
       Choco.player.params.v += Choco.gravity;
       Choco.player.pos[1] += (Choco.player.params.v / 2);
+      Choco.player.pos[1] = Math.max(Choco.player.pos[1],0);
     }else if (Choco.player.pos[1] >= 520
               &&
               !Choco.immortal
