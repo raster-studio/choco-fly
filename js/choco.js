@@ -27,7 +27,9 @@ Choco.screenHandlerCalled = false;
 Choco.chooseAnimFinished = false;
 Choco.animFrameRequested = false;
 Choco.upPressed = false;
+Choco.upBeingPressed = false;
 Choco.downPressed = false;
+Choco.downBeingPressed = false;
 Choco.spawningIn = true;
 
 Choco.skipReady = true;
@@ -721,19 +723,33 @@ Choco.handleInput = function (dt) {
 
   var move_speed = 0;
   Choco.downPressed = false;
-
-  if ((Choco.player.params.v >= -2 || Choco.player.pos[1] >=520 ) && Choco.player.pos[1] > 20 && (Kemist.Input.isDown('UP') || Kemist.Input.isDown('w'))) {
-    Choco.player.params.v = -10;
+  
+  if (!Choco.upBeingPressed && (Choco.player.params.v >= -2 || Choco.player.pos[1] >=520 ) && Choco.player.pos[1] > 20 && (Kemist.Input.isDown('UP') || Kemist.Input.isDown('w'))) {
+    Choco.player.params.v = -15;
     Choco.upPressed = true;
   }
 
 
-  if (Choco.player.pos[1] < 520 && (Kemist.Input.isDown('DOWN') || Kemist.Input.isDown('s'))) {
+  if (Kemist.Input.isDown('UP') || Kemist.Input.isDown('w')){
+    Choco.upBeingPressed=true;
+  }else{
+    Choco.upBeingPressed=false;
+  }
+  
+
+  if (!Choco.downBeingPressed && Choco.player.pos[1] < 520 && (Kemist.Input.isDown('DOWN') || Kemist.Input.isDown('s'))) {
 //    move_speed = Choco.playerSpeed * dt * 1.2;
 //    Choco.player.pos[1] += move_speed;
-    Choco.player.params.v+=1.5;
+    Choco.player.params.v+=6;
     Choco.downPressed = true;
     Choco.upPressed = false;
+  }
+  
+  
+    if (Kemist.Input.isDown('DOWN') || Kemist.Input.isDown('s')){
+    Choco.downBeingPressed=true;
+  }else{
+    Choco.downBeingPressed=false;
   }
 
 
@@ -1008,6 +1024,7 @@ Choco.updateEntities = function (dt) {
 //    $('#debug').html('Clouds: ' + Choco.cloud_objects.length + ', tree objects: ' + Choco.tree_objects.length+', mountain objects: ' + Choco.mountain_objects.length);
 //    $('#debug').html('Distance: ' + Choco.distance + '/' + Choco.levelDistances[Choco.game.level] + ', stones: ' + Choco.stone_objects.length + ', gifts:' + Choco.gift_objects.length + ', background objects: ' + Choco.background_objects.length);
 //    $('#debug').html('Player: ' + Math.round(Choco.player.pos[0]) + ',' + Math.round(Choco.player.pos[1]) + ', velocity:' + Choco.player.params.v);
+    $('#debug').html('UP: ' + Choco.upPressed + ', now: ' + Choco.upBeingPressed);
   }
 };
 
