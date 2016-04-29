@@ -326,14 +326,6 @@ progress{
   display: none;
 }
 
-#screen-highscore .username{
-  position: absolute;
-  color: #fff;
-  font-size: 2.4em;
-  top: 40px;
-  left: 140px;
-}
-
 #screen-highscore .score{
   position: absolute;
   color: #fff;
@@ -401,6 +393,40 @@ progress{
   width: 119px;
   height: 78px;
   top: 10px;
+}
+
+.countdown{
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  margin: auto;
+  display: none;
+}
+
+#countdown3{
+  background: url('../images/ui_elements.png') -730px 0% no-repeat;
+  width: 184px;
+  height: 225px;
+}
+
+#countdown2{
+  background: url('../images/ui_elements.png') -575px 0% no-repeat;
+  width: 154px;
+  height: 225px;
+}
+
+#countdown1{
+  background: url('../images/ui_elements.png') -449px 0% no-repeat;
+  width: 124px;
+  height: 225px;
+}
+
+#go{
+  background: url('../images/ui_elements.png') 0px -229px no-repeat;
+  width: 489px;
+  height: 176px;
 }
 
 #lives-box .death{
