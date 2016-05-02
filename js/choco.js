@@ -17,6 +17,7 @@ Choco.trailCounter = 0;
 Choco.dieCounter = 0;
 Choco.boundThreshold = 100;
 Choco.boundTrialThreshold = 5000;
+Choco.levelDistance = 4000;
 
 Choco.gravity = 0.5;
 
@@ -738,7 +739,7 @@ Choco.handleInput = function (dt) {
   var move_speed = 0;
   Choco.downPressed = false;
   
-  if (!Choco.upBeingPressed && (Choco.player.params.v >= -2 || Choco.player.pos[1] >=520 ) && Choco.player.pos[1] > -20 && (Kemist.Input.isDown('UP') || Kemist.Input.isDown('w'))) {
+  if (!Choco.finishing && !Choco.upBeingPressed && (Choco.player.params.v >= -2 || Choco.player.pos[1] >=520 ) && Choco.player.pos[1] > -40 && (Kemist.Input.isDown('UP') || Kemist.Input.isDown('w'))) {
     Choco.player.params.v = -15;
     Choco.upPressed = true;
   }
@@ -751,7 +752,7 @@ Choco.handleInput = function (dt) {
   }
   
 
-  if (!Choco.downBeingPressed && Choco.player.pos[1] < 520 && (Kemist.Input.isDown('DOWN') || Kemist.Input.isDown('s'))) {
+  if (!Choco.finishing && !Choco.downBeingPressed && Choco.player.pos[1] < 520 && (Kemist.Input.isDown('DOWN') || Kemist.Input.isDown('s'))) {
 //    move_speed = Choco.playerSpeed * dt * 1.2;
 //    Choco.player.pos[1] += move_speed;
     Choco.player.params.v+=10;
@@ -790,6 +791,10 @@ Choco.updateEntities = function (dt) {
   if (Choco.game.isGameOver) {
     return;
   }
+  
+  Choco.distance+=Choco.gameSpeed;    
+  Choco.finishApproach=(Choco.levelDistance-Choco.distance < 2800);
+  Choco.finishing=(Choco.levelDistance-Choco.distance < 500);
 
 
   // Handle pausing
@@ -899,11 +904,11 @@ Choco.updateEntities = function (dt) {
       Choco.spawningIn = true;
       Choco.player.pos[0] += Choco.gameSpeed;
       Choco.player.sprite.frames = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
-    } else if (Choco.player.pos[1] < 520 || (Choco.dieCounter > 0 && Choco.upPressed)) {
+    } else if (!Choco.finishing && (Choco.player.pos[1] < 520 || (Choco.dieCounter > 0 && Choco.upPressed))) {
       Choco.spawningIn = false;
       Choco.player.params.v += Choco.gravity;
       Choco.player.pos[1] += (Choco.player.params.v / 2);
-      Choco.player.pos[1] = Math.max(Choco.player.pos[1],-20);
+      Choco.player.pos[1] = Math.max(Choco.player.pos[1],-40);
     }else if (Choco.player.pos[1] >= 520
               &&
               !Choco.immortal
@@ -1029,6 +1034,38 @@ Choco.updateEntities = function (dt) {
     }
 
   }
+  
+  
+    // Finish approaching, create finish flag
+  if (Choco.finishApproach && Choco.finish==null){
+    Choco.finish=new Kemist.Entity(
+      [1600,200],
+      new Kemist.Sprite('images/totem.png',[0,0],[329,564])
+    );     
+  }
+  // Move finish flag
+  if (!Choco.finishing && Choco.finishApproach && Choco.finish != null){
+    Choco.finish.pos[0]-=Choco.gameSpeed/2;
+    if (Choco.levelDistance-Choco.distance < 1100 && !Choco.finishPlayed){
+//      Choco.playSound('finish');
+      Choco.finishPlayed=true;
+    }
+  }
+  // Move player out through finish
+  if (Choco.finishing){       
+    Choco.player.params.v=0;
+    Choco.player.pos[0]+=Choco.gameSpeed;
+    if (Choco.player.pos[1] != 200){
+      Choco.player.pos[1]=Choco.player.pos[1] < 200 ? Choco.player.pos[1]+Choco.gameSpeed : Choco.player.pos[1]-Choco.gameSpeed;
+      if (Math.abs(Choco.player.pos[1] - 200) < Choco.gameSpeed){
+        Choco.player.pos[1] = 200;
+      }
+    }
+    if (Choco.player.pos[0] > 1200){
+      Choco.game.level++;
+      Choco.startLevel();
+    }
+  }
 
 
 
@@ -1110,8 +1147,13 @@ Choco.renderGame = function (game) {
 
 
   game.renderEntities(Choco.cloud_objects);
-  game.renderEntities(Choco.mountain_objects);
+  game.renderEntities(Choco.mountain_objects);  
   game.renderEntities(Choco.tree_objects);
+  
+  if (Choco.finish!=null){
+    Choco.game.renderEntity(Choco.finish); 
+  }
+  
   game.renderEntities(Choco.ground_objects);
   game.renderEntities(Choco.pickup_objects);
   game.renderEntities(Choco.heart_objects);
@@ -1126,7 +1168,6 @@ Choco.renderGame = function (game) {
     Choco.game.renderEntity(Choco.player);
     Choco.game.renderEntities(Choco.enemy_objects);
   }
-
 
 };
 
