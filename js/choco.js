@@ -17,7 +17,7 @@ Choco.trailCounter = 0;
 Choco.dieCounter = 0;
 Choco.boundThreshold = 100;
 Choco.boundTrialThreshold = 5000;
-Choco.levelDistance = 4000;
+Choco.levelDistance = 10000;
 
 Choco.gravity = 0.5;
 
@@ -563,7 +563,7 @@ Choco.createPickup = function () {
     if (i > Choco.boundTrialThreshold) {
       return;
     }
-    pos = [Kemist.getRandomInt(1200, 1900), Kemist.getRandomInt(200, 400)];
+    pos = [Kemist.getRandomInt(1200, 2900), Kemist.getRandomInt(200, 400)];
     same = Choco.checkConflicts(pos[0], pos[1], item.size, Choco.pickup_objects) || Choco.checkConflicts(pos[0], pos[1], item.size, Choco.enemy_objects);
     i++;
   }
@@ -650,6 +650,10 @@ Choco.clearObjects = function () {
  * Starts a level
  */
 Choco.startLevel = function () {
+  if (Choco.game.level > 1){
+    var rand=Kemist.getRandomInt(1,2);
+    Choco.level_type=rand==1 ? 'day' : 'night';
+  }
   Choco.clearObjects();
   Choco.generateLandscape();
   Choco.drawLevel();
@@ -659,7 +663,7 @@ Choco.startLevel = function () {
   Choco.gameSpeed = Math.round(Choco.game.level * 0.7) + 6;
   Choco.playerSpeed = Math.round(Choco.gameSpeed * 75);
   Choco.distance = 0;
-
+  
   Choco.log('Level ' + Choco.game.level + ' started, gameSpeed:' + Choco.gameSpeed + ', playerSpeed:' + Choco.playerSpeed);
 
   Choco.player = new Kemist.Entity(
@@ -793,6 +797,7 @@ Choco.updateEntities = function (dt) {
   }
   
   Choco.distance+=Choco.gameSpeed;    
+  Choco.finishSoon=(Choco.levelDistance-Choco.distance < 4800);
   Choco.finishApproach=(Choco.levelDistance-Choco.distance < 2800);
   Choco.finishing=(Choco.levelDistance-Choco.distance < 500);
 
@@ -954,7 +959,7 @@ Choco.updateEntities = function (dt) {
       }
 
     }
-    if (Choco.enemy_objects.length < 1) {
+    if (!Choco.finishSoon && Choco.enemy_objects.length < 1) {
       Choco.createEnemy();
     }
 
@@ -993,13 +998,13 @@ Choco.updateEntities = function (dt) {
         obj.sprite = new Kemist.Sprite('images/scores.png', Choco.scores[points].offset, Choco.scores[points].size);
       }
     }
-    if (Choco.pickup_objects.length < 4) {
+    if (!Choco.finishSoon && Choco.pickup_objects.length < 4) {
       Choco.createPickup();
     }
 
 
     // Create extra lives
-    if (!Choco.finishApproach && Choco.game.lives < 3 && Choco.heart_objects.length < 1 && Kemist.getRandomInt(1, 400) == 1) {
+    if (!Choco.finishSoon && Choco.game.lives < 3 && Choco.heart_objects.length < 1 && Kemist.getRandomInt(1, 400) == 1) {
       Choco.createHeart();
     }
 
@@ -1048,11 +1053,12 @@ Choco.updateEntities = function (dt) {
     Choco.finish.pos[0]-=Choco.gameSpeed/2;
     if (Choco.levelDistance-Choco.distance < 1100 && !Choco.finishPlayed){
 //      Choco.playSound('finish');
-      Choco.finishPlayed=true;
+      Choco.finishPlayed=true;      
     }
   }
   // Move player out through finish
   if (Choco.finishing){       
+    Choco.player.sprite.frames = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
     Choco.player.params.v=0;
     Choco.player.pos[0]+=Choco.gameSpeed;
     if (Choco.player.pos[1] != 200){
@@ -1062,6 +1068,7 @@ Choco.updateEntities = function (dt) {
       }
     }
     if (Choco.player.pos[0] > 1200){
+      Choco.finish=null;
       Choco.game.level++;
       Choco.startLevel();
     }
@@ -1143,8 +1150,6 @@ Choco.renderGame = function (game) {
   var pattern = ctx.createPattern(Kemist.Resources.get(Choco.background[Choco.level_type]), 'repeat-x');
   ctx.fillStyle = pattern;
   ctx.fillRect(0, 0, 1280, 960);
-
-
 
   game.renderEntities(Choco.cloud_objects);
   game.renderEntities(Choco.mountain_objects);  
