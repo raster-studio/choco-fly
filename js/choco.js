@@ -17,7 +17,7 @@ Choco.trailCounter = 0;
 Choco.dieCounter = 0;
 Choco.boundThreshold = 100;
 Choco.boundTrialThreshold = 5000;
-Choco.levelDistance = 10000;
+Choco.levelDistance = 20000;
 
 Choco.gravity = 0.5;
 
@@ -33,7 +33,7 @@ Choco.downPressed = false;
 Choco.downBeingPressed = false;
 Choco.spawningIn = true;
 
-Choco.skipReady = true;
+Choco.skipReady = false;
 Choco.skipIntro = false;
 Choco.debug = true;
 Choco.immortal = false;
@@ -64,7 +64,18 @@ Choco.imageResources = [
         ;
 
 Choco.soundResources = [
-//  {name:'music', url:'sounds/green_day_basket_case.mp3', loop: true, polyphony: false, volume: 0.2}
+  {name:'title-music', url:'sounds/music1.ogg', loop: true, polyphony: false, volume: 0.2},
+  {name:'game-music', url:'sounds/music2.ogg', loop: true, polyphony: false, volume: 0.2},
+  {name:'ready', url:'sounds/ready.ogg', loop: false, polyphony: false, volume: 0.2},
+  {name:'steady', url:'sounds/steady.ogg', loop: false, polyphony: false, volume: 0.2},
+  {name:'swipe', url:'sounds/swipe.ogg', loop: false, polyphony: false, volume: 0.2},
+  {name:'go', url:'sounds/go.ogg', loop: false, polyphony: false, volume: 0.2},
+  {name:'pickup', url:'sounds/coin.ogg', loop: false, polyphony: true, volume: 0.2},
+  {name:'flap', url:'sounds/flap.ogg', loop: false, polyphony: true, volume: 0.02},
+  {name:'die', url:'sounds/chirp2.ogg', loop: false, polyphony: false, volume: 1},
+  {name:'heart', url:'sounds/heart.ogg', loop: false, polyphony: false, volume: 1},
+  {name:'crash', url:'sounds/crash.ogg', loop: false, polyphony: true, volume: 1},
+  {name:'fall', url:'sounds/hurt.ogg', loop: false, polyphony: true, volume: 1},
 
 ];
 
@@ -249,6 +260,7 @@ Choco.handleScreen = function () {
       if (Choco.switchScreenTimer === null) {
         Choco.switchScreenTimer = setTimeout(Choco.initSwitchScreenTimer, Choco.screenSwitcherDelay);
       }
+      Choco.playSound('title-music');
       break;
 
     case 'choose':
@@ -259,6 +271,7 @@ Choco.handleScreen = function () {
       Choco.clearSwitchScreenTimer();
       Choco.resetGame();
       Choco.game.run();
+      Kemist.Audio.pause('title-music');      
       break;
 
     case 'highscore':
@@ -680,9 +693,9 @@ Choco.startLevel = function () {
     tl7.add(TweenLite.fromTo('#countdown3', 0.75, {autoAlpha: 1, y:'0%'},{autoAlpha: 0, y: '-50%', ease:"Expo.easeOut"}) );
     tl7.add(TweenLite.fromTo('#countdown2', 0.75, {autoAlpha: 0, scale: 0}, {display: 'block',autoAlpha:1, scale: 1, ease:"Elastic.easeOut",onStart: function(){Choco.playSound('steady',0.5);}}),'-=0.5' );
     tl7.add(TweenLite.fromTo('#countdown2', 0.75, {autoAlpha: 1, y:'0%'},{autoAlpha: 0, y: '-50%', ease:"Expo.easeOut"}) );
-    tl7.add(TweenLite.fromTo('#countdown1', 0.75, {autoAlpha: 0, scale: 0}, {display: 'block',autoAlpha:1, scale: 1, ease:"Elastic.easeOut",onStart: function(){Choco.playSound('ready',0.5);}}),'-=0.5' );
+    tl7.add(TweenLite.fromTo('#countdown1', 0.75, {autoAlpha: 0, scale: 0}, {display: 'block',autoAlpha:1, scale: 1, ease:"Elastic.easeOut",onStart: function(){Choco.playSound('go',0.5);}}),'-=0.5' );
     tl7.add(TweenLite.fromTo('#countdown1', 0.75, {autoAlpha: 1, y:'0%'},{autoAlpha: 0, y: '-50%', ease:"Expo.easeOut"}) );
-    tl7.add(TweenLite.fromTo('#go', 0.75, {autoAlpha: 0, scale: 0}, {display: 'block',autoAlpha:1, scale: 1, ease:"Elastic.easeOut",onStart: function(){Choco.playSound('go',0.5);}}),'-=0.5' );
+    tl7.add(TweenLite.fromTo('#go', 0.75, {autoAlpha: 0, scale: 0}, {display: 'block',autoAlpha:1, scale: 1, ease:"Elastic.easeOut",onComplete: function(){Choco.playSound('game-music',0.5);}}),'-=0.5' );
     tl7.add(TweenLite.fromTo('#go', 0.75, {autoAlpha: 1, y:'0%'},{autoAlpha: 0, y: '-50%', ease:"Expo.easeOut"}) );
   }
 };
@@ -692,7 +705,7 @@ Choco.startLevel = function () {
  * Player died
  */
 Choco.die = function () {
-  Choco.playSound('explosion', 0.5);
+  Choco.playSound('die', 0.25);
   Choco.game.die();
   Choco.drawLives();
   Choco.died = true;
@@ -744,13 +757,14 @@ Choco.handleInput = function (dt) {
   Choco.downPressed = false;
   
   if (!Choco.finishing && !Choco.upBeingPressed && (Choco.player.params.v >= -2 || Choco.player.pos[1] >=520 ) && Choco.player.pos[1] > -40 && (Kemist.Input.isDown('UP') || Kemist.Input.isDown('w'))) {
-    Choco.player.params.v = -15;
+    Choco.player.params.v = -17;
     Choco.upPressed = true;
+    Choco.playSound('flap',0.2);
   }
 
 
   if (Kemist.Input.isDown('UP') || Kemist.Input.isDown('w')){
-    Choco.upBeingPressed=true;
+    Choco.upBeingPressed=true;    
   }else{
     Choco.upBeingPressed=false;
   }
@@ -761,7 +775,8 @@ Choco.handleInput = function (dt) {
 //    Choco.player.pos[1] += move_speed;
     Choco.player.params.v+=10;
     Choco.downPressed = true;
-    Choco.upPressed = false;
+    Choco.upPressed = false;    
+    Choco.playSound('swipe',0.2);
   }
   
   
@@ -922,6 +937,7 @@ Choco.updateEntities = function (dt) {
               &&
               !Choco.died){
       Choco.die();
+      Choco.playSound('fall',0.3)
     }        
     
     if (Choco.upPressed && Choco.player.params.v > 0){
@@ -956,6 +972,7 @@ Choco.updateEntities = function (dt) {
         //Choco.game.ctx.strokeRect(obj.pos[0] * 1.05, obj.pos[1] * 1.05, obj.sprite.size[0] * .85, obj.sprite.size[1] * .85);
         //Choco.game.ctx.strokeRect(Choco.player.pos[0] + Choco.player.sprite.size[0] / 3, Choco.player.pos[1] + Choco.player.sprite.size[1] / 4, Choco.player.sprite.size[0] / 2, Choco.player.sprite.size[1] / 3);
         Choco.die();
+        Choco.playSound('crash',0.3);
       }
 
     }
@@ -991,7 +1008,7 @@ Choco.updateEntities = function (dt) {
               ) {
         var points = obj.params.score;
         Choco.game.score += points;
-//        Choco.playSound('gift', 0.5);
+        Choco.playSound('pickup', 0.5);
         Choco.drawScore();
         Choco.log('Collision to a gift, scored ' + points + '.');
         obj.scored = true;
@@ -1027,7 +1044,7 @@ Choco.updateEntities = function (dt) {
                 &&
                 Choco.game.lives < 3
                 ) {
-//          Choco.playSound('heart');
+          Choco.playSound('heart',0.3);
           Choco.game.lives++;
           Choco.drawLives();
           Choco.log('Collision to an extra life.');
@@ -1439,7 +1456,6 @@ $(document).ready(function () {
 
   Kemist.Audio.polyphony = 2;
   Kemist.Audio.add(Choco.soundResources);
-  Kemist.Audio.play('music', 0.4);
 
 });
 
