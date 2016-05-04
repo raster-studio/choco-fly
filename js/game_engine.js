@@ -517,7 +517,7 @@ Kemist.Audio = {
     if (typeof volume !== 'undefined'){
       Kemist.Audio.resources[name][voice].volume=volume;  
     }else{
-      Kemist.Audio.resources[name][voice].volume=1; 
+      Kemist.Audio.resources[name][voice].volume=Kemist.Audio.resources[name].volume ? Kemist.Audio.resources[name].volume : 1; 
     }
     Kemist.Audio.resources[name][voice].loop=Kemist.Audio.resources[name].loop;  
     Kemist.Audio.resources[name][voice].play();

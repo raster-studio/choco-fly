@@ -261,6 +261,14 @@ progress{
   display: none;
 }
 
+#screen-highscore .username{
+  position: absolute;
+  color: #fff;
+  font-size: 2.4em;
+  top: 40px;
+  left: 140px;
+}
+
 #screen-highscore #rank1{
   background-position: 0 -551px;
   left: 47px;
@@ -396,13 +404,16 @@ progress{
 }
 
 .countdown{
+  display: none;
+}
+
+.center{
   position: absolute;
   left: 0;
   right: 0;
   top: 0;
   bottom: 0;
   margin: auto;
-  display: none;
 }
 
 #countdown3{
@@ -445,6 +456,11 @@ progress{
   left: 340px;
 }
 
+#game-over{  
+  background: url('../images/ui_elements.png') -490px -230px no-repeat;
+  width: 683px;
+  height: 186px;
+}
 
 @keyframes cloud
 {

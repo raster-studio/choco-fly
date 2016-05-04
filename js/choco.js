@@ -7,7 +7,7 @@
 
 var Choco = Choco || {};
 
-Choco.screen = 'game';
+Choco.screen = 'intro';
 
 Choco.pausing = 0;
 Choco.gameSpeed = 6;
@@ -32,6 +32,7 @@ Choco.upBeingPressed = false;
 Choco.downPressed = false;
 Choco.downBeingPressed = false;
 Choco.spawningIn = true;
+Choco.titlePlaying=false;
 
 Choco.skipReady = false;
 Choco.skipIntro = false;
@@ -64,8 +65,8 @@ Choco.imageResources = [
         ;
 
 Choco.soundResources = [
-  {name:'title-music', url:'sounds/music1.ogg', loop: true, polyphony: false, volume: 0.2},
-  {name:'game-music', url:'sounds/music2.ogg', loop: true, polyphony: false, volume: 0.2},
+  {name:'title-music', url:'sounds/music1.ogg', loop: true, polyphony: false, volume: 1},
+  {name:'game-music', url:'sounds/music2.ogg', loop: true, polyphony: false, volume: 1},
   {name:'ready', url:'sounds/ready.ogg', loop: false, polyphony: false, volume: 0.2},
   {name:'steady', url:'sounds/steady.ogg', loop: false, polyphony: false, volume: 0.2},
   {name:'swipe', url:'sounds/swipe.ogg', loop: false, polyphony: false, volume: 0.2},
@@ -76,6 +77,7 @@ Choco.soundResources = [
   {name:'heart', url:'sounds/heart.ogg', loop: false, polyphony: false, volume: 1},
   {name:'crash', url:'sounds/crash.ogg', loop: false, polyphony: true, volume: 1},
   {name:'fall', url:'sounds/hurt.ogg', loop: false, polyphony: true, volume: 1},
+  {name:'game-over', url:'sounds/gameover.ogg', loop: false, polyphony: false, volume: 1},
 
 ];
 
@@ -260,7 +262,9 @@ Choco.handleScreen = function () {
       if (Choco.switchScreenTimer === null) {
         Choco.switchScreenTimer = setTimeout(Choco.initSwitchScreenTimer, Choco.screenSwitcherDelay);
       }
-      Choco.playSound('title-music');
+      Choco.muteSound('game-music');
+      Choco.titlePlaying ? null : Choco.playSound('title-music');
+      Choco.titlePlaying=true;
       break;
 
     case 'choose':
@@ -271,10 +275,14 @@ Choco.handleScreen = function () {
       Choco.clearSwitchScreenTimer();
       Choco.resetGame();
       Choco.game.run();
-      Kemist.Audio.pause('title-music');      
+      Choco.muteSound('title-music');    
+      Choco.titlePlaying=false;
       break;
 
     case 'highscore':
+      Choco.muteSound('game-music');
+      Choco.titlePlaying ? null : Choco.playSound('title-music');
+      Choco.titlePlaying=true;
       if (Choco.switchScreenTimer === null) {
         Choco.switchScreenTimer = setTimeout(Choco.initSwitchScreenTimer, Choco.screenSwitcherDelay);
       }
@@ -311,7 +319,7 @@ Choco.switchScreen = function (screen) {
       Choco.chooseAnimFinished = false;
       break;
     case 'game':
-      $('#lives-box, #score-box, #level-box, .countdown, #game-over, #end-score, .touch').hide();
+      $('.countdown, #game-over, #end-score, .touch').hide();
       $('#lives-box #head').removeAttr('title').removeClass();
       Choco.resetGame();
       break;
@@ -722,7 +730,15 @@ Choco.die = function () {
  * Game is over
  */
 Choco.gameOver = function () {
+  Choco.muteSound('game-music');
+  var tl8  = new TimelineMax({repeat:0, delay: 1});
+  tl8.add(TweenLite.fromTo('#game-over', 1, {autoAlpha: 0, scale: 0, rotation: '360deg'}, {display: 'block',autoAlpha:1, scale: 1, rotation: 0, ease:"Elastic.easeOut",onStart: function(){Choco.playSound('game-over');}}),'game_over' );
+  tl8.add(TweenLite.fromTo('#end-score', 1, {autoAlpha: 0, scale: 0},{display: 'block', autoAlpha: 1, scale: 1, ease:"Expo.easeOut"}),'game_over+=1' );
 
+  $('#end-score-nr').html(Choco.game.score);
+
+  var tl9  = new TimelineMax({repeat:6, yoyo:true,delay: 3, onComplete: function(){Choco.game.stop(); Choco.switchScreen('highscore');}});
+  tl9.add( TweenLite.fromTo('#end-score', 0.3, {scale: 1},{ scale: 0.95}),'game-over' );
 };
 
 
@@ -939,7 +955,7 @@ Choco.updateEntities = function (dt) {
               &&
               !Choco.died){
       Choco.die();
-      Choco.playSound('fall',0.3)
+      Choco.playSound('fall',0.3);
     }        
     
     if (Choco.upPressed && Choco.player.params.v > 0){
@@ -1373,6 +1389,16 @@ Choco.playSound = function (name, volume) {
 };
 
 
+/**
+ * Plays specified sound
+ * 
+ * @param {string} filename
+ */
+Choco.muteSound = function (name) {
+  Kemist.Audio.pause(name);
+  Choco.log(name + ' sound paused.');  
+};
+
 
 /**
  * Progress loading
@@ -1425,7 +1451,7 @@ $(document).ready(function () {
   $('#sound').click(function () {
     $(this).toggleClass('muted');
     Kemist.Audio.muted = Kemist.Audio.muted ? false : true;
-    Kemist.Cookie.set('xmas_game_muted', Kemist.Audio.muted, 1440, '/');
+    Kemist.Cookie.set('chocofly_game_muted', Kemist.Audio.muted, 1440, '/');
     if (Kemist.Audio.muted) {
       Kemist.Audio.pause('music');
     } else {
