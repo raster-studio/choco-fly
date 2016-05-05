@@ -189,7 +189,7 @@ Choco.pickups = {
   },
   4: {
     img: 'images/pickups.png',
-    size: [80, 76, 72, 0],
+    size: [80, 76, 73, 0],
     score: 1000
   }
 };
@@ -1114,9 +1114,9 @@ Choco.updateEntities = function (dt) {
 
   if (Choco.debug) {
 //    $('#debug').html('Clouds: ' + Choco.cloud_objects.length + ', tree objects: ' + Choco.tree_objects.length+', mountain objects: ' + Choco.mountain_objects.length);
-//    $('#debug').html('Distance: ' + Choco.distance + '/' + Choco.levelDistances[Choco.game.level] + ', stones: ' + Choco.stone_objects.length + ', gifts:' + Choco.gift_objects.length + ', background objects: ' + Choco.background_objects.length);
+    $('#debug').html('Distance: ' + Choco.distance + '/' + Choco.levelDistance + ', trees: ' + Choco.tree_objects.length + ', pickups:' + Choco.pickup_objects.length + ', enemy objects: ' + Choco.enemy_objects.length);
 //    $('#debug').html('Player: ' + Math.round(Choco.player.pos[0]) + ',' + Math.round(Choco.player.pos[1]) + ', velocity:' + Choco.player.params.v);
-    $('#debug').html('UP: ' + Choco.upPressed + ', now: ' + Choco.upBeingPressed);
+//    $('#debug').html('UP: ' + Choco.upPressed + ', now: ' + Choco.upBeingPressed);
   }
 };
 
