@@ -1484,7 +1484,7 @@ $(document).ready(function () {
 
   Kemist.Audio.polyphony = 2;
   Kemist.Audio.add(Choco.soundResources);
-
+  
 });
 
 

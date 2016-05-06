@@ -7,6 +7,28 @@
     <link media="all" href="css/style.css?v1.0.2" type="text/css" rel="stylesheet" />
     <title>Choco Fly</title>
   </head>
+  <body>
+    <script>
+      window.fbAsyncInit = function() {
+        FB.init({
+          appId      : '982074625146679',
+          xfbml      : true,
+          version    : 'v2.5'
+        });
+          FB.login(function(){
+            // Note: The call will only work if you accept the permission request
+            FB.api('/me/feed', 'post', {message: 'Hello, world!'});
+          }, {scope: 'publish_actions'});
+      };
+
+      (function(d, s, id){
+         var js, fjs = d.getElementsByTagName(s)[0];
+         if (d.getElementById(id)) {return;}
+         js = d.createElement(s); js.id = id;
+         js.src = "https://connect.facebook.net/en_US/sdk.js";
+         fjs.parentNode.insertBefore(js, fjs);
+       }(document, 'script', 'facebook-jssdk'));
+    </script>
     <div id="viewport">
       <div id="loading"></div>
       <div id="sound"></div>
