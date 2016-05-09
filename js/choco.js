@@ -44,7 +44,7 @@ Choco.player = null;
 
 Choco.sessionId = null;
 Choco.highScores = [];
-Choco.highScoreReached = false;
+Choco.highScoreReached = true;
 Choco.switchScreenTimer = null;
 Choco.highScoreTimeLine = null;
 Choco.screenSwitcherDelay = 10000;
@@ -388,15 +388,6 @@ Choco.drawLives = function () {
 
 
 /**
- * Draws score box
- */
-Choco.drawScore = function () {
-//  $('#score-box #score').html(Choco.game.score);
-  
-};
-
-
-/**
  * Draws level box
  */
 Choco.drawLevel = function () {
@@ -679,7 +670,6 @@ Choco.startLevel = function () {
   Choco.generateLandscape();
   Choco.drawLevel();
   Choco.drawLives();
-  Choco.drawScore();
 
   Choco.gameSpeed = Math.round(Choco.game.level * 0.7) + 7;
   Choco.playerSpeed = Math.round(Choco.gameSpeed * 75);
@@ -1027,7 +1017,6 @@ Choco.updateEntities = function (dt) {
         var points = obj.params.score;
         Choco.game.score += points;
         Choco.playSound('pickup', 0.5);
-        Choco.drawScore();
         Choco.log('Collision to a gift, scored ' + points + '.');
         obj.scored = true;
         obj.sprite = new Kemist.Sprite('images/scores.png', Choco.scores[points].offset, Choco.scores[points].size);
