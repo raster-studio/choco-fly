@@ -32,7 +32,7 @@ Choco.upBeingPressed = false;
 Choco.downPressed = false;
 Choco.downBeingPressed = false;
 Choco.spawningIn = true;
-Choco.titlePlaying=false;
+Choco.titlePlaying = false;
 
 Choco.skipReady = false;
 Choco.skipIntro = false;
@@ -44,7 +44,7 @@ Choco.player = null;
 
 Choco.sessionId = null;
 Choco.highScores = [];
-Choco.highScoreReached = true;
+Choco.highScoreReached = false;
 Choco.switchScreenTimer = null;
 Choco.highScoreTimeLine = null;
 Choco.screenSwitcherDelay = 10000;
@@ -65,20 +65,19 @@ Choco.imageResources = [
         ;
 
 Choco.soundResources = [
-  {name:'title-music', url:'sounds/music1.ogg', loop: true, polyphony: false, volume: 1},
-  {name:'game-music', url:'sounds/music2.ogg', loop: true, polyphony: false, volume: 1},
-  {name:'ready', url:'sounds/ready.ogg', loop: false, polyphony: false, volume: 0.2},
-  {name:'steady', url:'sounds/steady.ogg', loop: false, polyphony: false, volume: 0.2},
-  {name:'swipe', url:'sounds/swipe.ogg', loop: false, polyphony: false, volume: 0.2},
-  {name:'go', url:'sounds/go.ogg', loop: false, polyphony: false, volume: 0.2},
-  {name:'pickup', url:'sounds/coin.ogg', loop: false, polyphony: true, volume: 0.2},
-  {name:'flap', url:'sounds/flap.ogg', loop: false, polyphony: true, volume: 0.02},
-  {name:'die', url:'sounds/chirp2.ogg', loop: false, polyphony: false, volume: 1},
-  {name:'heart', url:'sounds/heart.ogg', loop: false, polyphony: false, volume: 1},
-  {name:'crash', url:'sounds/crash.ogg', loop: false, polyphony: true, volume: 1},
-  {name:'fall', url:'sounds/hurt.ogg', loop: false, polyphony: true, volume: 1},
-  {name:'game-over', url:'sounds/gameover.ogg', loop: false, polyphony: false, volume: 1},
-
+  {name: 'title-music', url: 'sounds/music1.ogg', loop: true, polyphony: false, volume: 1},
+  {name: 'game-music', url: 'sounds/music2.ogg', loop: true, polyphony: false, volume: 1},
+  {name: 'ready', url: 'sounds/ready.ogg', loop: false, polyphony: false, volume: 0.2},
+  {name: 'steady', url: 'sounds/steady.ogg', loop: false, polyphony: false, volume: 0.2},
+  {name: 'swipe', url: 'sounds/swipe.ogg', loop: false, polyphony: false, volume: 0.2},
+  {name: 'go', url: 'sounds/go.ogg', loop: false, polyphony: false, volume: 0.2},
+  {name: 'pickup', url: 'sounds/coin.ogg', loop: false, polyphony: true, volume: 0.2},
+  {name: 'flap', url: 'sounds/flap.ogg', loop: false, polyphony: true, volume: 0.02},
+  {name: 'die', url: 'sounds/chirp2.ogg', loop: false, polyphony: false, volume: 1},
+  {name: 'heart', url: 'sounds/heart.ogg', loop: false, polyphony: false, volume: 1},
+  {name: 'crash', url: 'sounds/crash.ogg', loop: false, polyphony: true, volume: 1},
+  {name: 'fall', url: 'sounds/hurt.ogg', loop: false, polyphony: true, volume: 1},
+  {name: 'game-over', url: 'sounds/gameover.ogg', loop: false, polyphony: false, volume: 1},
 ];
 
 
@@ -264,7 +263,7 @@ Choco.handleScreen = function () {
       }
       Choco.muteSound('game-music');
       Choco.titlePlaying ? null : Choco.playSound('title-music');
-      Choco.titlePlaying=true;
+      Choco.titlePlaying = true;
       break;
 
     case 'choose':
@@ -275,14 +274,14 @@ Choco.handleScreen = function () {
       Choco.clearSwitchScreenTimer();
       Choco.resetGame();
       Choco.game.run();
-      Choco.muteSound('title-music');    
-      Choco.titlePlaying=false;
+      Choco.muteSound('title-music');
+      Choco.titlePlaying = false;
       break;
 
     case 'highscore':
       Choco.muteSound('game-music');
       Choco.titlePlaying ? null : Choco.playSound('title-music');
-      Choco.titlePlaying=true;
+      Choco.titlePlaying = true;
       if (Choco.switchScreenTimer === null) {
         Choco.switchScreenTimer = setTimeout(Choco.initSwitchScreenTimer, Choco.screenSwitcherDelay);
       }
@@ -476,7 +475,7 @@ Choco.generateLandscape = function () {
   }
 
   // Score
-  Choco.scorePanel = new Kemist.Entity([20,20],new Kemist.Sprite('images/ui_elements.png',[0,0],[450,141]));
+  Choco.scorePanel = new Kemist.Entity([20, 20], new Kemist.Sprite('images/ui_elements.png', [0, 0], [450, 141]));
 };
 
 
@@ -549,7 +548,7 @@ Choco.createEnemy = function () {
       return;
     }
     pos = [Kemist.getRandomInt(1200, 2200), Kemist.getRandomInt(200, 400)];
-    same = Choco.checkConflicts(pos, [item.size[0]+100000,item.size[1]], Choco.enemy_objects) || Choco.checkConflicts(pos, item.size, Choco.pickup_objects);
+    same = Choco.checkConflicts(pos, [item.size[0] + 100000, item.size[1]], Choco.enemy_objects) || Choco.checkConflicts(pos, item.size, Choco.pickup_objects);
     i++;
   }
 
@@ -602,16 +601,16 @@ Choco.createHeart = function () {
       return;
     }
     pos = [Kemist.getRandomInt(1200, 1700), Kemist.getRandomInt(200, 400)];
-    same = Choco.checkConflicts(pos, [86,78], Choco.enemy_objects) || Choco.checkConflicts(pos, [86,78], Choco.pickup_objects);
+    same = Choco.checkConflicts(pos, [86, 78], Choco.enemy_objects) || Choco.checkConflicts(pos, [86, 78], Choco.pickup_objects);
     i++;
   }
 
 
   var obj = new Kemist.Entity(
           pos,
-          new Kemist.Sprite('images/pickups.png', [62,85], [86,78]),
+          new Kemist.Sprite('images/pickups.png', [62, 85], [86, 78]),
           {type: 'extra life'}
-          );
+  );
 
   Choco.heart_objects.push(obj);
 };
@@ -662,9 +661,9 @@ Choco.clearObjects = function () {
  * Starts a level
  */
 Choco.startLevel = function () {
-  if (Choco.game.level > 1){
-    var rand=Kemist.getRandomInt(1,2);
-    Choco.level_type=rand==1 ? 'day' : 'night';
+  if (Choco.game.level > 1) {
+    var rand = Kemist.getRandomInt(1, 2);
+    Choco.level_type = rand == 1 ? 'day' : 'night';
   }
   Choco.clearObjects();
   Choco.generateLandscape();
@@ -674,7 +673,7 @@ Choco.startLevel = function () {
   Choco.gameSpeed = Math.round(Choco.game.level * 0.7) + 7;
   Choco.playerSpeed = Math.round(Choco.gameSpeed * 75);
   Choco.distance = 0;
-  
+
   Choco.log('Level ' + Choco.game.level + ' started, gameSpeed:' + Choco.gameSpeed + ', playerSpeed:' + Choco.playerSpeed);
 
   Choco.player = new Kemist.Entity(
@@ -686,15 +685,23 @@ Choco.startLevel = function () {
 
   if (!Choco.skipReady) {
     Choco.pausing = 250;
-    var tl7  = new TimelineMax({repeat:0, delay: 0.5});
-    tl7.add(TweenLite.fromTo('#countdown3', 0.75, {autoAlpha: 0, scale: 0}, {display: 'block',autoAlpha:1, scale: 1, ease:"Elastic.easeOut",onStart: function(){Choco.playSound('ready',0.5);}}),'ready' );
-    tl7.add(TweenLite.fromTo('#countdown3', 0.75, {autoAlpha: 1, y:'0%'},{autoAlpha: 0, y: '-50%', ease:"Expo.easeOut"}) );
-    tl7.add(TweenLite.fromTo('#countdown2', 0.75, {autoAlpha: 0, scale: 0}, {display: 'block',autoAlpha:1, scale: 1, ease:"Elastic.easeOut",onStart: function(){Choco.playSound('steady',0.5);}}),'-=0.5' );
-    tl7.add(TweenLite.fromTo('#countdown2', 0.75, {autoAlpha: 1, y:'0%'},{autoAlpha: 0, y: '-50%', ease:"Expo.easeOut"}) );
-    tl7.add(TweenLite.fromTo('#countdown1', 0.75, {autoAlpha: 0, scale: 0}, {display: 'block',autoAlpha:1, scale: 1, ease:"Elastic.easeOut",onStart: function(){Choco.playSound('go',0.5);}}),'-=0.5' );
-    tl7.add(TweenLite.fromTo('#countdown1', 0.75, {autoAlpha: 1, y:'0%'},{autoAlpha: 0, y: '-50%', ease:"Expo.easeOut"}) );
-    tl7.add(TweenLite.fromTo('#go', 0.75, {autoAlpha: 0, scale: 0}, {display: 'block',autoAlpha:1, scale: 1, ease:"Elastic.easeOut",onComplete: function(){Choco.playSound('game-music',0.5);}}),'-=0.5' );
-    tl7.add(TweenLite.fromTo('#go', 0.75, {autoAlpha: 1, y:'0%'},{autoAlpha: 0, y: '-50%', ease:"Expo.easeOut"}) );
+    var tl7 = new TimelineMax({repeat: 0, delay: 0.5});
+    tl7.add(TweenLite.fromTo('#countdown3', 0.75, {autoAlpha: 0, scale: 0}, {display: 'block', autoAlpha: 1, scale: 1, ease: "Elastic.easeOut", onStart: function () {
+        Choco.playSound('ready', 0.5);
+      }}), 'ready');
+    tl7.add(TweenLite.fromTo('#countdown3', 0.75, {autoAlpha: 1, y: '0%'}, {autoAlpha: 0, y: '-50%', ease: "Expo.easeOut"}));
+    tl7.add(TweenLite.fromTo('#countdown2', 0.75, {autoAlpha: 0, scale: 0}, {display: 'block', autoAlpha: 1, scale: 1, ease: "Elastic.easeOut", onStart: function () {
+        Choco.playSound('steady', 0.5);
+      }}), '-=0.5');
+    tl7.add(TweenLite.fromTo('#countdown2', 0.75, {autoAlpha: 1, y: '0%'}, {autoAlpha: 0, y: '-50%', ease: "Expo.easeOut"}));
+    tl7.add(TweenLite.fromTo('#countdown1', 0.75, {autoAlpha: 0, scale: 0}, {display: 'block', autoAlpha: 1, scale: 1, ease: "Elastic.easeOut", onStart: function () {
+        Choco.playSound('go', 0.5);
+      }}), '-=0.5');
+    tl7.add(TweenLite.fromTo('#countdown1', 0.75, {autoAlpha: 1, y: '0%'}, {autoAlpha: 0, y: '-50%', ease: "Expo.easeOut"}));
+    tl7.add(TweenLite.fromTo('#go', 0.75, {autoAlpha: 0, scale: 0}, {display: 'block', autoAlpha: 1, scale: 1, ease: "Elastic.easeOut", onComplete: function () {
+        Choco.playSound('game-music', 0.5);
+      }}), '-=0.5');
+    tl7.add(TweenLite.fromTo('#go', 0.75, {autoAlpha: 1, y: '0%'}, {autoAlpha: 0, y: '-50%', ease: "Expo.easeOut"}));
   }
 };
 
@@ -721,14 +728,19 @@ Choco.die = function () {
  */
 Choco.gameOver = function () {
   Choco.muteSound('game-music');
-  var tl8  = new TimelineMax({repeat:0, delay: 1});
-  tl8.add(TweenLite.fromTo('#game-over', 1, {autoAlpha: 0, scale: 0, rotation: '360deg'}, {display: 'block',autoAlpha:1, scale: 1, rotation: 0, ease:"Elastic.easeOut",onStart: function(){Choco.playSound('game-over');}}),'game_over' );
-  tl8.add(TweenLite.fromTo('#end-score', 1, {autoAlpha: 0, scale: 0},{display: 'block', autoAlpha: 1, scale: 1, ease:"Expo.easeOut"}),'game_over+=1' );
+  var tl8 = new TimelineMax({repeat: 0, delay: 1});
+  tl8.add(TweenLite.fromTo('#game-over', 1, {autoAlpha: 0, scale: 0, rotation: '360deg'}, {display: 'block', autoAlpha: 1, scale: 1, rotation: 0, ease: "Elastic.easeOut", onStart: function () {
+      Choco.playSound('game-over');
+    }}), 'game_over');
+  tl8.add(TweenLite.fromTo('#end-score', 1, {autoAlpha: 0, scale: 0}, {display: 'block', autoAlpha: 1, scale: 1, ease: "Expo.easeOut"}), 'game_over+=1');
 
   $('#end-score-nr').html(Choco.game.score);
 
-  var tl9  = new TimelineMax({repeat:6, yoyo:true,delay: 3, onComplete: function(){Choco.game.stop(); Choco.switchScreen('highscore');}});
-  tl9.add( TweenLite.fromTo('#end-score', 0.3, {scale: 1},{ scale: 0.95}),'game-over' );
+  var tl9 = new TimelineMax({repeat: 6, yoyo: true, delay: 3, onComplete: function () {
+      Choco.game.stop();
+      Choco.switchScreen('highscore');
+    }});
+  tl9.add(TweenLite.fromTo('#end-score', 0.3, {scale: 1}, {scale: 0.95}), 'game-over');
 };
 
 
@@ -761,41 +773,41 @@ Choco.handleInput = function (dt) {
 
   var move_speed = 0;
   Choco.downPressed = false;
-  
-  if (!Choco.finishing && !Choco.upBeingPressed && (Choco.player.params.v >= -5 || Choco.player.pos[1] >=520 ) && Choco.player.pos[1] > -40 && (Kemist.Input.isDown('UP') || Kemist.Input.isDown('w'))) {
+
+  if (!Choco.finishing && !Choco.upBeingPressed && (Choco.player.params.v >= -5 || Choco.player.pos[1] >= 520) && Choco.player.pos[1] > -40 && (Kemist.Input.isDown('UP') || Kemist.Input.isDown('w'))) {
     Choco.player.params.v = -17;
     Choco.upPressed = true;
-    Choco.playSound('flap',0.2);
+    Choco.playSound('flap', 0.2);
   }
 
 
-  if (Kemist.Input.isDown('UP') || Kemist.Input.isDown('w')){
-    Choco.upBeingPressed=true;    
-  }else{
-    Choco.upBeingPressed=false;
+  if (Kemist.Input.isDown('UP') || Kemist.Input.isDown('w')) {
+    Choco.upBeingPressed = true;
+  } else {
+    Choco.upBeingPressed = false;
   }
-  
+
 
   if (!Choco.finishing && !Choco.downBeingPressed && Choco.player.pos[1] < 520 && (Kemist.Input.isDown('DOWN') || Kemist.Input.isDown('s'))) {
 //    move_speed = Choco.playerSpeed * dt * 1.2;
 //    Choco.player.pos[1] += move_speed;
-    Choco.player.params.v+=10;
+    Choco.player.params.v += 10;
     Choco.downPressed = true;
-    Choco.upPressed = false;    
-    Choco.playSound('swipe',0.2);
-    Choco.player.sprite._index=0;
+    Choco.upPressed = false;
+    Choco.playSound('swipe', 0.2);
+    Choco.player.sprite._index = 0;
   }
-  
-  
-    if (Kemist.Input.isDown('DOWN') || Kemist.Input.isDown('s')){
-    Choco.downBeingPressed=true;
-  }else{
-    Choco.downBeingPressed=false;
+
+
+  if (Kemist.Input.isDown('DOWN') || Kemist.Input.isDown('s')) {
+    Choco.downBeingPressed = true;
+  } else {
+    Choco.downBeingPressed = false;
   }
 
 
   if (Choco.upPressed) {
-    Choco.player.sprite.frames = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];    
+    Choco.player.sprite.frames = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
   } else {
     Choco.player.sprite.frames = [0];
   }
@@ -817,11 +829,11 @@ Choco.updateEntities = function (dt) {
   if (Choco.game.isGameOver) {
     return;
   }
-  
-  Choco.distance+=Choco.gameSpeed;    
-  Choco.finishSoon=(Choco.levelDistance-Choco.distance < 4800);
-  Choco.finishApproach=(Choco.levelDistance-Choco.distance < 2800);
-  Choco.finishing=(Choco.levelDistance-Choco.distance < 500);
+
+  Choco.distance += Choco.gameSpeed;
+  Choco.finishSoon = (Choco.levelDistance - Choco.distance < 4800);
+  Choco.finishApproach = (Choco.levelDistance - Choco.distance < 2800);
+  Choco.finishing = (Choco.levelDistance - Choco.distance < 500);
 
   Choco.player.sprite.update(dt);
 
@@ -936,23 +948,23 @@ Choco.updateEntities = function (dt) {
       Choco.spawningIn = false;
       Choco.player.params.v += Choco.gravity;
       Choco.player.pos[1] += (Choco.player.params.v / 2);
-      Choco.player.pos[1] = Math.max(Choco.player.pos[1],-40);
-    }else if (Choco.player.pos[1] >= 520
-              &&
-              !Choco.immortal
-              &&
-              Choco.dieCounter < 1
-              &&
-              !Choco.died){
+      Choco.player.pos[1] = Math.max(Choco.player.pos[1], -40);
+    } else if (Choco.player.pos[1] >= 520
+            &&
+            !Choco.immortal
+            &&
+            Choco.dieCounter < 1
+            &&
+            !Choco.died) {
       Choco.die();
-      Choco.playSound('fall',0.3);
-    }        
-    
-    if (Choco.upPressed && Choco.player.params.v > 0){
-      Choco.upPressed=false;
+      Choco.playSound('fall', 0.3);
     }
 
-    
+    if (Choco.upPressed && Choco.player.params.v > 0) {
+      Choco.upPressed = false;
+    }
+
+
 
     // Enemies
     var die = false;
@@ -980,7 +992,7 @@ Choco.updateEntities = function (dt) {
         //Choco.game.ctx.strokeRect(obj.pos[0] * 1.05, obj.pos[1] * 1.05, obj.sprite.size[0] * .85, obj.sprite.size[1] * .85);
         //Choco.game.ctx.strokeRect(Choco.player.pos[0] + Choco.player.sprite.size[0] / 3, Choco.player.pos[1] + Choco.player.sprite.size[1] / 4, Choco.player.sprite.size[0] / 2, Choco.player.sprite.size[1] / 3);
         Choco.die();
-        Choco.playSound('crash',0.3);
+        Choco.playSound('crash', 0.3);
       }
 
     }
@@ -1047,11 +1059,11 @@ Choco.updateEntities = function (dt) {
                 &&
                 !Choco.died
                 &&
-                obj.collidesTo(Choco.player,20)
+                obj.collidesTo(Choco.player, 20)
                 &&
                 Choco.game.lives < 3
                 ) {
-          Choco.playSound('heart',0.3);
+          Choco.playSound('heart', 0.3);
           Choco.game.lives++;
           Choco.drawLives();
           Choco.log('Collision to an extra life.');
@@ -1063,36 +1075,36 @@ Choco.updateEntities = function (dt) {
     }
 
   }
-  
-  
-    // Finish approaching, create finish flag
-  if (Choco.finishApproach && Choco.finish==null){
-    Choco.finish=new Kemist.Entity(
-      [1600,100],
-      new Kemist.Sprite('images/totem.png',[0,0],[329,564])
-    );     
+
+
+  // Finish approaching, create finish flag
+  if (Choco.finishApproach && Choco.finish == null) {
+    Choco.finish = new Kemist.Entity(
+            [1600, 100],
+            new Kemist.Sprite('images/totem.png', [0, 0], [329, 564])
+            );
   }
   // Move finish flag
-  if (!Choco.finishing && Choco.finishApproach && Choco.finish != null){
-    Choco.finish.pos[0]-=Choco.gameSpeed/2;
-    if (Choco.levelDistance-Choco.distance < 1100 && !Choco.finishPlayed){
+  if (!Choco.finishing && Choco.finishApproach && Choco.finish != null) {
+    Choco.finish.pos[0] -= Choco.gameSpeed / 2;
+    if (Choco.levelDistance - Choco.distance < 1100 && !Choco.finishPlayed) {
 //      Choco.playSound('finish');
-      Choco.finishPlayed=true;      
+      Choco.finishPlayed = true;
     }
   }
   // Move player out through finish
-  if (Choco.finishing){       
+  if (Choco.finishing) {
     Choco.player.sprite.frames = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
-    Choco.player.params.v=0;
-    Choco.player.pos[0]+=Choco.gameSpeed;
-    if (Choco.player.pos[1] != 200){
-      Choco.player.pos[1]=Choco.player.pos[1] < 200 ? Choco.player.pos[1]+Choco.gameSpeed : Choco.player.pos[1]-Choco.gameSpeed;
-      if (Math.abs(Choco.player.pos[1] - 200) < Choco.gameSpeed){
+    Choco.player.params.v = 0;
+    Choco.player.pos[0] += Choco.gameSpeed;
+    if (Choco.player.pos[1] != 200) {
+      Choco.player.pos[1] = Choco.player.pos[1] < 200 ? Choco.player.pos[1] + Choco.gameSpeed : Choco.player.pos[1] - Choco.gameSpeed;
+      if (Math.abs(Choco.player.pos[1] - 200) < Choco.gameSpeed) {
         Choco.player.pos[1] = 200;
       }
     }
-    if (Choco.player.pos[0] > 1200){
-      Choco.finish=null;
+    if (Choco.player.pos[0] > 1200) {
+      Choco.finish = null;
       Choco.game.level++;
       Choco.startLevel();
     }
@@ -1176,20 +1188,20 @@ Choco.renderGame = function (game) {
   ctx.fillRect(0, 0, 1280, 960);
 
   game.renderEntities(Choco.cloud_objects);
-  game.renderEntities(Choco.mountain_objects);  
+  game.renderEntities(Choco.mountain_objects);
   game.renderEntities(Choco.tree_objects);
-  
-  if (Choco.finish!=null){
-    Choco.game.renderEntity(Choco.finish); 
+
+  if (Choco.finish != null) {
+    Choco.game.renderEntity(Choco.finish);
   }
-  
+
   game.renderEntities(Choco.ground_objects);
   game.renderEntities(Choco.pickup_objects);
   game.renderEntities(Choco.heart_objects);
   game.renderEntity(Choco.scorePanel);
-  
-  ctx.font='42px Museo';
-  ctx.fillStyle='#fff';
+
+  ctx.font = '42px Museo';
+  ctx.fillStyle = '#fff';
   ctx.fillText(game.score.toString(), 170, 100);
 
   // Render the player if the game isn't over
@@ -1287,10 +1299,22 @@ Choco.storeHighScore = function (name) {
     return;
   }
 
+  var now = new Date();
+  var year = now.getYear() + 1900;
+  var month = now.getMonth() + 1;
+  var day = now.getDate();
+  var hours = now.getHours();
+  var minutes = now.getMinutes();
+  var seconds = now.getSeconds();
+  var occured = year + '-' + (month < 10 ? '0' + month : month) + '-' + (day < 10 ? '0' + day : day) + ' ' + (hours < 10 ? '0' + hours : hours) + ':' + (minutes < 10 ? '0' + minutes : minutes) + ':' + (seconds < 10 ? '0' + seconds : seconds);
+
+
   $.ajax({
     type: 'POST',
     url: 'http://rasterstudio.hu/api/chocofly.store_highscore',
-    data: 'sessionId=' + escape(Choco.sessionId) + '&name=' + name + '&score=' + Choco.game.score + '&level=' + Choco.game.level + '&character=' + escape(Choco.character),
+    data: 'sessionId=' + escape(Choco.sessionId) + '&platform=Desktop&name=' + 
+            name + '&score=' + Choco.game.score + '&level=' + Choco.game.level+
+            '&occured='+occured,
     dataType: 'json',
     cache: false,
     crossDomain: true,
@@ -1323,6 +1347,7 @@ Choco.drawHighScores = function () {
   var row;
   var rank = 1;
   var score = (Choco.game ? Choco.game.score : 0);
+
   $('#rank1, #rank2, #rank3, #rank4').removeClass('reached');
   for (var i = 0; i < Choco.highScores.length; i++) {
     if (rank > 8) {
@@ -1331,7 +1356,7 @@ Choco.drawHighScores = function () {
     if (!Choco.highScoreReached && score > Choco.highScores[i].score) {
       Choco.highScoreReached = true;
       row = $('<div class="player-name"><input type="text" id="new-player-name" /></div><div class="score ' + Choco.character + '">' + score + '</div>');
-      $('#hs' + rank).html('').append(row);
+      $('#rank' + rank).html('').append(row);
       $('#rank' + rank).addClass('reached');
       rank++;
     }
@@ -1343,7 +1368,7 @@ Choco.drawHighScores = function () {
   if (Choco.highScores.length == 0) {
     Choco.highScoreReached = true;
     row = $('<div class="player-name"><input type="text" id="new-player-name" /></div><div class="score ' + Choco.character + '">' + score + '</div>');
-    $('#hs' + rank).html('').append(row);
+    $('#rank' + rank).html('').append(row);
     $('#rank' + rank).addClass('reached');
   }
 
@@ -1352,7 +1377,7 @@ Choco.drawHighScores = function () {
     Choco.highScoreTimeLine.add(TweenLite.fromTo('#highscore-table .reached', 0.3, {scale: 1}, {scale: 1.2}));
     setTimeout(function () {
       $('#new-player-name').focus();
-    }, 4000);
+    }, 2000);
     $('#new-player-name').keypress(function (event) {
       if (event.which == 13) {
         Choco.storeHighScore($(this).val());
@@ -1385,7 +1410,7 @@ Choco.playSound = function (name, volume) {
  */
 Choco.muteSound = function (name) {
   Kemist.Audio.pause(name);
-  Choco.log(name + ' sound paused.');  
+  Choco.log(name + ' sound paused.');
 };
 
 
@@ -1426,10 +1451,10 @@ $(document).ready(function () {
   $('#start-button').click(function () {
     Choco.switchScreen('game');
   });
-  
-  $('#pause-button').click(function(){
+
+  $('#pause-button').click(function () {
     $(this).toggleClass('paused');
-    Choco.isPaused=(!Choco.isPaused);
+    Choco.isPaused = (!Choco.isPaused);
   });
 
   // Choose character
@@ -1478,7 +1503,7 @@ $(document).ready(function () {
 
   Kemist.Audio.polyphony = 2;
   Kemist.Audio.add(Choco.soundResources);
-  
+
 });
 
 
