@@ -212,7 +212,7 @@ progress{
   left: 800px;
 }
 
-#start_hazisweets{
+#start-hazisweets{
   width: 200px;
   height: 76px;
   background: url('../images/start_hazisweets.png') 0% 0% no-repeat;
@@ -223,7 +223,7 @@ progress{
   margin: auto;
 }
 
-#start_logo{
+#start-logo{
   width: 566px;
   height: 315px;
   background: url('../images/logos.png') 0% 0% no-repeat;
@@ -234,7 +234,7 @@ progress{
   margin: auto;
 }
 
-#start_button{
+#start-button{
   width: 676px;
   height: 197px;
   background: url('../images/ui_elements.png') 0% -410px no-repeat;
@@ -392,7 +392,7 @@ progress{
   height: 153px;
   position: absolute;
   top: 10px;
-  left: 720px;
+  left: 670px;
 }
 
 #lives-box .life{
@@ -401,6 +401,20 @@ progress{
   width: 119px;
   height: 78px;
   top: 10px;
+}
+
+#pause-button{
+  background: url('../images/ui_elements.png') -308px -606px no-repeat;
+  width: 134px;
+  height: 140px;
+  position: absolute;
+  top: 10px;
+  right: 10px;  
+  cursor: pointer;
+}
+
+#pause-button.paused{
+  background: url('../images/ui_elements.png') -443px -606px no-repeat;
 }
 
 .countdown{

@@ -15,10 +15,10 @@
           xfbml      : true,
           version    : 'v2.5'
         });
-          FB.login(function(){
-            // Note: The call will only work if you accept the permission request
-            FB.api('/me/feed', 'post', {message: 'Hello, world!'});
-          }, {scope: 'publish_actions'});
+//          FB.login(function(){
+//            // Note: The call will only work if you accept the permission request
+//            FB.api('/me/feed', 'post', {message: 'Hello, world!'});
+//          }, {scope: 'publish_actions'});
       };
 
       (function(d, s, id){
@@ -49,9 +49,9 @@
         <div class="tree-day tree1"></div>
         <div class="tree-day tree2"></div>
         <div class="ground-day"></div>
-        <div id="start_hazisweets"></div>
-        <div id="start_logo"></div>
-        <div id="start_button"></div>        
+        <div id="start-hazisweets"></div>
+        <div id="start-logo"></div>
+        <div id="start-button"></div>        
       </div>      
       
       <div id="screen-game" class="screen">
@@ -65,6 +65,7 @@
         <div id="level-box">
           <div id="level"></div>
         </div>
+        <div id="pause-button"></div>
         <div id="countdown3" class="countdown center"></div>
         <div id="countdown2" class="countdown center"></div>
         <div id="countdown1" class="countdown center"></div>
