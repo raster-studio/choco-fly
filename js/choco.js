@@ -7,7 +7,7 @@
 
 var Choco = Choco || {};
 
-Choco.screen = 'start';
+Choco.screen = 'intro';
 
 Choco.pausing = 0;
 Choco.gameSpeed = 6;
@@ -36,7 +36,7 @@ Choco.titlePlaying = false;
 
 Choco.skipReady = false;
 Choco.skipIntro = false;
-Choco.debug = true;
+Choco.debug = false;
 Choco.immortal = false;
 Choco.startingLevel = 1;
 
@@ -1118,7 +1118,7 @@ Choco.updateEntities = function (dt) {
 
   if (Choco.debug) {
 //    $('#debug').html('Clouds: ' + Choco.cloud_objects.length + ', tree objects: ' + Choco.tree_objects.length+', mountain objects: ' + Choco.mountain_objects.length);
-    $('#debug').html('Distance: ' + Choco.distance + '/' + Choco.levelDistance + ', trees: ' + Choco.tree_objects.length + ', pickups:' + Choco.pickup_objects.length + ', enemy objects: ' + Choco.enemy_objects.length);
+//    $('#debug').html('Distance: ' + Choco.distance + '/' + Choco.levelDistance + ', trees: ' + Choco.tree_objects.length + ', pickups:' + Choco.pickup_objects.length + ', enemy objects: ' + Choco.enemy_objects.length);
 //    $('#debug').html('Player: ' + Math.round(Choco.player.pos[0]) + ',' + Math.round(Choco.player.pos[1]) + ', velocity:' + Choco.player.params.v);
 //    $('#debug').html('UP: ' + Choco.upPressed + ', now: ' + Choco.upBeingPressed);
   }
@@ -1438,7 +1438,15 @@ Choco.loadingProgress = function (progress, count) {
 Choco.FacebookPost = function (message) {
   FB.login(function () {
     // Note: The call will only work if you accept the permission request
-    FB.api('/me/feed', 'post', {message: message, link: "http://hazisweets.hu/", caption: "Játssz Te is!"});
+    FB.api('/me/feed', 'post', {message: message, link: "http://hazisweets.hu/", caption: "Játssz Te is!"},
+        function(response){
+          if (!response || response.error) {
+            alert('Hiba történt!');
+          } else {
+            alert('Sikeres postolás!');
+          }
+        }            
+    );
   }, {scope: 'publish_actions'});
 };
 
