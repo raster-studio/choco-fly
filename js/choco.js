@@ -45,6 +45,7 @@ Choco.player = null;
 Choco.sessionId = null;
 Choco.highScores = [];
 Choco.highScoreReached = false;
+Choco.rankReached = 0;
 Choco.switchScreenTimer = null;
 Choco.highScoreTimeLine = null;
 Choco.screenSwitcherDelay = 10000;
@@ -288,6 +289,12 @@ Choco.handleScreen = function () {
       Choco.getHighScores(function () {
         Choco.drawHighScores();
       });
+      if (Choco.game !== null && Choco.game.score > 0){
+        $('#facebook').fadeIn(500);
+      }else{
+        $('#facebook').hide();
+      }
+
       var tl3 = new TimelineMax({repeat: 0});
       tl3.add(TweenLite.fromTo('#screen-highscore #hs-choco', 0.75, {autoAlpha: 0, scale: 0}, {display: 'block', autoAlpha: 1, scale: 1, ease: "Expo.easeInOut"}), 'highscore');
       tl3.add(TweenLite.fromTo('#screen-highscore #hs-separator', 0.75, {autoAlpha: 0, scale: 0}, {display: 'block', autoAlpha: 1, scale: 1, ease: "Expo.easeInOut"}), 'highscore+=0.3');
@@ -311,11 +318,6 @@ Choco.switchScreen = function (screen) {
     case 'start':
       $('#start-hazisweets, #start-logo, #start-button').hide();
       $('#screen-start .cloud-day, #screen-start .tree-day, #screen-start .mountain-day, #screen-start .ground-day').show();
-      break;
-    case 'choose':
-      $('#choose-logo, #choose-button, #screen-choose .character').hide();
-      $('#screen-choose .character').removeAttr('id').removeClass('loaded');
-      Choco.chooseAnimFinished = false;
       break;
     case 'game':
       $('.countdown, #game-over, #end-score, .touch').hide();
@@ -416,6 +418,7 @@ Choco.resetGame = function () {
   Choco.game.reset();
 
   Choco.highScoreReached = false;
+  Choco.rankReached=0;
   Choco.isPaused = false;
   Choco.gameSpeed = 6;
   Choco.playerSpeed = 300;
@@ -1312,9 +1315,9 @@ Choco.storeHighScore = function (name) {
   $.ajax({
     type: 'POST',
     url: 'http://rasterstudio.hu/api/chocofly.store_highscore',
-    data: 'sessionId=' + escape(Choco.sessionId) + '&platform=Desktop&name=' + 
-            name + '&score=' + Choco.game.score + '&level=' + Choco.game.level+
-            '&occured='+occured,
+    data: 'sessionId=' + escape(Choco.sessionId) + '&platform=Desktop&name=' +
+            name + '&score=' + Choco.game.score + '&level=' + Choco.game.level +
+            '&occured=' + occured,
     dataType: 'json',
     cache: false,
     crossDomain: true,
@@ -1331,6 +1334,7 @@ Choco.storeHighScore = function (name) {
           Choco.highScoreTimeLine.clear();
         }
         Choco.highScoreReached = false;
+        Choco.rankReached = 0;
         Choco.game.score = 0;
         Choco.drawHighScores();
       });
@@ -1355,7 +1359,8 @@ Choco.drawHighScores = function () {
     }
     if (!Choco.highScoreReached && score > Choco.highScores[i].score) {
       Choco.highScoreReached = true;
-      row = $('<div class="player-name"><input type="text" id="new-player-name" /></div><div class="score ' + Choco.character + '">' + score + '</div>');
+      Choco.rankReached = rank;
+      row = $('<div class="player-name"><input type="text" id="new-player-name" /></div><div class="score">' + score + '</div>');
       $('#rank' + rank).html('').append(row);
       $('#rank' + rank).addClass('reached');
       rank++;
@@ -1367,7 +1372,7 @@ Choco.drawHighScores = function () {
 
   if (Choco.highScores.length == 0) {
     Choco.highScoreReached = true;
-    row = $('<div class="player-name"><input type="text" id="new-player-name" /></div><div class="score ' + Choco.character + '">' + score + '</div>');
+    row = $('<div class="player-name"><input type="text" id="new-player-name" /></div><div class="score">' + score + '</div>');
     $('#rank' + rank).html('').append(row);
     $('#rank' + rank).addClass('reached');
   }
@@ -1430,6 +1435,13 @@ Choco.loadingProgress = function (progress, count) {
 };
 
 
+Choco.FacebookPost = function (message) {
+  FB.login(function () {
+    // Note: The call will only work if you accept the permission request
+    FB.api('/me/feed', 'post', {message: message, link: "http://hazisweets.hu/", caption: "Játssz Te is!"});
+  }, {scope: 'publish_actions'});
+};
+
 
 $(document).ready(function () {
 
@@ -1452,18 +1464,21 @@ $(document).ready(function () {
     Choco.switchScreen('game');
   });
 
+  // Pause button
   $('#pause-button').click(function () {
     $(this).toggleClass('paused');
     Choco.isPaused = (!Choco.isPaused);
   });
 
-  // Choose character
-  $('#screen-choose .character').click(function () {
-    if (Choco.chooseAnimFinished) {
-      Choco.character = $(this).attr('id');
-      Choco.log('Chosen character: ' + Choco.character);
-      Choco.switchScreen('game');
+  // Facebook post
+  $('#facebook').click(function () {
+    var message;
+    if (Choco.highScoreReached) {
+      message = Choco.rankReached + ". lettem " + Choco.game.score + " ponttal a Choco Flyban!";
+    } else {
+      message = Choco.game.score + " pontot szereztem a Choco Flyban!";
     }
+    Choco.FacebookPost(message);
   });
 
   // Mute/Unmute
