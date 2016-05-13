@@ -504,6 +504,18 @@ progress{
   display: none;
 }
 
+#tutorial{
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  margin: auto;
+  background: url('../images/tutorial.jpg') 0% 0% no-repeat;
+  width: 1920px;
+  height: 1040px;
+}
+
 @keyframes cloud
 {
     from {transform: translateX(1200px);}

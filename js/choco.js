@@ -60,7 +60,7 @@ Choco.imageResources = [
   "images/bg_day.png", "images/clouds.png", "images/grass_day.png", "images/grass_night.png", "images/highscore.png",
   "images/intro.png", "images/intro_background.png", "images/logos.png", "images/Museo900.png", "images/pickups.png",
   "images/planes.png", "images/terrain.png", "images/Toonish1.png", "images/Toonish2.png", "images/Toonish3.png",
-  "images/Toonish4.png", "images/totem.png", "images/toucanFrames.png", "images/trees.png", "images/tutorial.png",
+  "images/Toonish4.png", "images/totem.png", "images/toucanFrames.png", "images/trees.png", "images/tutorial.jpg",
   "images/ui_elements.png", "images/bg_night.png", "images/start_hazisweets.png", "images/toucan2.png", "images/scores.png"
 ]
         ;
@@ -289,9 +289,9 @@ Choco.handleScreen = function () {
       Choco.getHighScores(function () {
         Choco.drawHighScores();
       });
-      if (Choco.game !== null && Choco.game.score > 0){
+      if (Choco.game !== null && Choco.game.score > 0) {
         $('#facebook').fadeIn(500);
-      }else{
+      } else {
         $('#facebook').hide();
       }
 
@@ -418,7 +418,7 @@ Choco.resetGame = function () {
   Choco.game.reset();
 
   Choco.highScoreReached = false;
-  Choco.rankReached=0;
+  Choco.rankReached = 0;
   Choco.isPaused = false;
   Choco.gameSpeed = 6;
   Choco.playerSpeed = 300;
@@ -550,8 +550,8 @@ Choco.createEnemy = function () {
     if (i > Choco.boundTrialThreshold) {
       return;
     }
-    pos = [Kemist.getRandomInt(1200, 2200), Kemist.getRandomInt(200, 400)];
-    same = Choco.checkConflicts(pos, [item.size[0] + 100000, item.size[1]], Choco.enemy_objects) || Choco.checkConflicts(pos, item.size, Choco.pickup_objects);
+    pos = [Kemist.getRandomInt(1200, 3600), Kemist.getRandomInt(200, 400)];
+    same = Choco.checkConflicts(pos, [item.size[0] + 1600, item.size[1]], Choco.enemy_objects) || Choco.checkConflicts(pos, item.size, Choco.pickup_objects);
     i++;
   }
 
@@ -687,24 +687,7 @@ Choco.startLevel = function () {
 
 
   if (!Choco.skipReady) {
-    Choco.pausing = 250;
-    var tl7 = new TimelineMax({repeat: 0, delay: 0.5});
-    tl7.add(TweenLite.fromTo('#countdown3', 0.75, {autoAlpha: 0, scale: 0}, {display: 'block', autoAlpha: 1, scale: 1, ease: "Elastic.easeOut", onStart: function () {
-        Choco.playSound('ready', 0.5);
-      }}), 'ready');
-    tl7.add(TweenLite.fromTo('#countdown3', 0.75, {autoAlpha: 1, y: '0%'}, {autoAlpha: 0, y: '-50%', ease: "Expo.easeOut"}));
-    tl7.add(TweenLite.fromTo('#countdown2', 0.75, {autoAlpha: 0, scale: 0}, {display: 'block', autoAlpha: 1, scale: 1, ease: "Elastic.easeOut", onStart: function () {
-        Choco.playSound('steady', 0.5);
-      }}), '-=0.5');
-    tl7.add(TweenLite.fromTo('#countdown2', 0.75, {autoAlpha: 1, y: '0%'}, {autoAlpha: 0, y: '-50%', ease: "Expo.easeOut"}));
-    tl7.add(TweenLite.fromTo('#countdown1', 0.75, {autoAlpha: 0, scale: 0}, {display: 'block', autoAlpha: 1, scale: 1, ease: "Elastic.easeOut", onStart: function () {
-        Choco.playSound('go', 0.5);
-      }}), '-=0.5');
-    tl7.add(TweenLite.fromTo('#countdown1', 0.75, {autoAlpha: 1, y: '0%'}, {autoAlpha: 0, y: '-50%', ease: "Expo.easeOut"}));
-    tl7.add(TweenLite.fromTo('#go', 0.75, {autoAlpha: 0, scale: 0}, {display: 'block', autoAlpha: 1, scale: 1, ease: "Elastic.easeOut", onComplete: function () {
-        Choco.playSound('game-music', 0.5);
-      }}), '-=0.5');
-    tl7.add(TweenLite.fromTo('#go', 0.75, {autoAlpha: 1, y: '0%'}, {autoAlpha: 0, y: '-50%', ease: "Expo.easeOut"}));
+    Choco.countDown();
   }
 };
 
@@ -723,6 +706,30 @@ Choco.die = function () {
   }
 
 
+};
+
+
+Choco.countDown = function (fast) {
+  $('.countdown').show();
+  Choco.pausing = 200;
+  var delay=(typeof fast !=='undefined' && fast===true ? 0.5 : 0.75);
+  var tl7 = new TimelineMax({repeat: 0, delay: 0.5});
+  tl7.add(TweenLite.fromTo('#countdown3', delay, {autoAlpha: 0, scale: 0}, {display: 'block', autoAlpha: 1, scale: 1, ease: "Elastic.easeOut", onStart: function () {
+      Choco.playSound('ready', 0.5);
+    }}), 'ready');
+  tl7.add(TweenLite.fromTo('#countdown3', delay, {autoAlpha: 1, y: '0%'}, {autoAlpha: 0, y: '-50%', ease: "Expo.easeOut"}));
+  tl7.add(TweenLite.fromTo('#countdown2', delay, {autoAlpha: 0, scale: 0}, {display: 'block', autoAlpha: 1, scale: 1, ease: "Elastic.easeOut", onStart: function () {
+      Choco.playSound('steady', 0.5);
+    }}), '-='+(delay-0.25));
+  tl7.add(TweenLite.fromTo('#countdown2', delay, {autoAlpha: 1, y: '0%'}, {autoAlpha: 0, y: '-50%', ease: "Expo.easeOut"}));
+  tl7.add(TweenLite.fromTo('#countdown1', delay, {autoAlpha: 0, scale: 0}, {display: 'block', autoAlpha: 1, scale: 1, ease: "Elastic.easeOut", onStart: function () {
+      Choco.playSound('go', 0.5);
+    }}), '-='+(delay-0.25));
+  tl7.add(TweenLite.fromTo('#countdown1', delay, {autoAlpha: 1, y: '0%'}, {autoAlpha: 0, y: '-50%', ease: "Expo.easeOut"}));
+  tl7.add(TweenLite.fromTo('#go', delay, {autoAlpha: 0, scale: 0}, {display: 'block', autoAlpha: 1, scale: 1, ease: "Elastic.easeOut", onComplete: function () {
+      Choco.playSound('game-music', 0.5);
+    }}), '-='+(delay-0.25));
+  tl7.add(TweenLite.fromTo('#go', delay, {autoAlpha: 1, y: '0%'}, {autoAlpha: 0, y: '-50%', ease: "Expo.easeOut"}));
 };
 
 
@@ -1439,13 +1446,13 @@ Choco.FacebookPost = function (message) {
   FB.login(function () {
     // Note: The call will only work if you accept the permission request
     FB.api('/me/feed', 'post', {message: message, link: "http://hazisweets.hu/", caption: "Játssz Te is!"},
-        function(response){
-          if (!response || response.error) {
-            alert('Hiba történt!');
-          } else {
-            alert('Sikeres postolás!');
-          }
-        }            
+            function (response) {
+              if (!response || response.error) {
+                alert('Hiba történt!');
+              } else {
+                alert('Sikeres postolás!');
+              }
+            }
     );
   }, {scope: 'publish_actions'});
 };
@@ -1469,6 +1476,11 @@ $(document).ready(function () {
 
   // Start button
   $('#start-button').click(function () {
+    Choco.switchScreen('tutorial');
+  });
+  
+  // Tutorial
+  $('#tutorial').click(function () {
     Choco.switchScreen('game');
   });
 
@@ -1476,6 +1488,9 @@ $(document).ready(function () {
   $('#pause-button').click(function () {
     $(this).toggleClass('paused');
     Choco.isPaused = (!Choco.isPaused);
+    if (!Choco.isPaused) {
+      Choco.countDown(true);
+    }
   });
 
   // Facebook post
@@ -1531,8 +1546,8 @@ $(document).ready(function () {
 
 
 $(window).blur(function () {
-  Choco.isPaused = true;
+//  Choco.isPaused = true;
 });
 $(window).focus(function () {
-  Choco.isPaused = false;
+//  Choco.isPaused = false;
 });
