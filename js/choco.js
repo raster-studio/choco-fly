@@ -792,7 +792,10 @@ Choco.handleInput = function (dt) {
 
 
   if (Kemist.Input.isDown('UP') || Kemist.Input.isDown('w')) {
-    Choco.upBeingPressed = true;
+    if (!Choco.upBeingPressed){
+      Choco.player.sprite._index=0;
+    }
+    Choco.upBeingPressed = true;    
   } else {
     Choco.upBeingPressed = false;
   }
@@ -818,8 +821,11 @@ Choco.handleInput = function (dt) {
 
   if (Choco.upPressed) {
     Choco.player.sprite.frames = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
+//    Choco.player.sprite._index=0;
+    Choco.player.sprite.once=true;
   } else {
     Choco.player.sprite.frames = [0];
+    Choco.player.sprite.once=false;
   }
 
 };
@@ -954,6 +960,7 @@ Choco.updateEntities = function (dt) {
       Choco.spawningIn = true;
       Choco.player.pos[0] += Choco.gameSpeed;
       Choco.player.sprite.frames = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
+      Choco.player.sprite.once=false;
     } else if (!Choco.finishing && (Choco.player.pos[1] < 520 || (Choco.dieCounter > 0 && Choco.upPressed))) {
       Choco.spawningIn = false;
       Choco.player.params.v += Choco.gravity;
@@ -1105,6 +1112,7 @@ Choco.updateEntities = function (dt) {
   // Move player out through finish
   if (Choco.finishing) {
     Choco.player.sprite.frames = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
+    Choco.player.sprite.once=false;
     Choco.player.params.v = 0;
     Choco.player.pos[0] += Choco.gameSpeed;
     if (Choco.player.pos[1] != 200) {

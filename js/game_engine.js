@@ -304,6 +304,7 @@ Kemist.Sprite = function(url, pos, size, speed, frames, dir, once){
   this.url = url;
   this.dir = dir || 'horizontal';
   this.once = once;
+  this.done = false;
 };
 
 Kemist.Sprite.prototype = {
@@ -329,7 +330,6 @@ Kemist.Sprite.prototype = {
       var max = this.frames.length;
       var idx = Math.floor(this._index);
       frame = this.frames[idx % max];
-
       if (this.once && idx >= max) {
         this.done = true;
         frame = this.frames[this.frames.length - 1];
