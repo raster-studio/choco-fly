@@ -512,8 +512,8 @@ progress{
   bottom: 0;
   margin: auto;
   background: url('../images/tutorial.jpg') 0% 0% no-repeat;
-  width: 1920px;
-  height: 1040px;
+  width: 1280px;
+  height: 695px;
 }
 
 @keyframes cloud
