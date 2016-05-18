@@ -423,6 +423,7 @@ Choco.resetGame = function () {
   Choco.gameSpeed = 6;
   Choco.playerSpeed = 300;
   Choco.died = false;
+  Choco.finish = null;
 };
 
 
@@ -712,7 +713,7 @@ Choco.die = function () {
 Choco.countDown = function (fast) {
   $('.countdown').show();
   Choco.pausing = 200;
-  var delay=(typeof fast !=='undefined' && fast===true ? 0.5 : 0.75);
+  var delay = (typeof fast !== 'undefined' && fast === true ? 0.5 : 0.75);
   var tl7 = new TimelineMax({repeat: 0, delay: 0.5});
   tl7.add(TweenLite.fromTo('#countdown3', delay, {autoAlpha: 0, scale: 0}, {display: 'block', autoAlpha: 1, scale: 1, ease: "Elastic.easeOut", onStart: function () {
       Choco.playSound('ready', 0.5);
@@ -720,15 +721,15 @@ Choco.countDown = function (fast) {
   tl7.add(TweenLite.fromTo('#countdown3', delay, {autoAlpha: 1, y: '0%'}, {autoAlpha: 0, y: '-50%', ease: "Expo.easeOut"}));
   tl7.add(TweenLite.fromTo('#countdown2', delay, {autoAlpha: 0, scale: 0}, {display: 'block', autoAlpha: 1, scale: 1, ease: "Elastic.easeOut", onStart: function () {
       Choco.playSound('steady', 0.5);
-    }}), '-='+(delay-0.25));
+    }}), '-=' + (delay - 0.25));
   tl7.add(TweenLite.fromTo('#countdown2', delay, {autoAlpha: 1, y: '0%'}, {autoAlpha: 0, y: '-50%', ease: "Expo.easeOut"}));
   tl7.add(TweenLite.fromTo('#countdown1', delay, {autoAlpha: 0, scale: 0}, {display: 'block', autoAlpha: 1, scale: 1, ease: "Elastic.easeOut", onStart: function () {
       Choco.playSound('go', 0.5);
-    }}), '-='+(delay-0.25));
+    }}), '-=' + (delay - 0.25));
   tl7.add(TweenLite.fromTo('#countdown1', delay, {autoAlpha: 1, y: '0%'}, {autoAlpha: 0, y: '-50%', ease: "Expo.easeOut"}));
   tl7.add(TweenLite.fromTo('#go', delay, {autoAlpha: 0, scale: 0}, {display: 'block', autoAlpha: 1, scale: 1, ease: "Elastic.easeOut", onComplete: function () {
       Choco.playSound('game-music', 0.5);
-    }}), '-='+(delay-0.25));
+    }}), '-=' + (delay - 0.25));
   tl7.add(TweenLite.fromTo('#go', delay, {autoAlpha: 1, y: '0%'}, {autoAlpha: 0, y: '-50%', ease: "Expo.easeOut"}));
 };
 
@@ -792,10 +793,10 @@ Choco.handleInput = function (dt) {
 
 
   if (Kemist.Input.isDown('UP') || Kemist.Input.isDown('w')) {
-    if (!Choco.upBeingPressed){
-      Choco.player.sprite._index=0;
+    if (!Choco.upBeingPressed) {
+      Choco.player.sprite._index = 0;
     }
-    Choco.upBeingPressed = true;    
+    Choco.upBeingPressed = true;
   } else {
     Choco.upBeingPressed = false;
   }
@@ -822,10 +823,10 @@ Choco.handleInput = function (dt) {
   if (Choco.upPressed) {
     Choco.player.sprite.frames = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
 //    Choco.player.sprite._index=0;
-    Choco.player.sprite.once=true;
+    Choco.player.sprite.once = true;
   } else {
     Choco.player.sprite.frames = [0];
-    Choco.player.sprite.once=false;
+    Choco.player.sprite.once = false;
   }
 
 };
@@ -960,7 +961,7 @@ Choco.updateEntities = function (dt) {
       Choco.spawningIn = true;
       Choco.player.pos[0] += Choco.gameSpeed;
       Choco.player.sprite.frames = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
-      Choco.player.sprite.once=false;
+      Choco.player.sprite.once = false;
     } else if (!Choco.finishing && (Choco.player.pos[1] < 520 || (Choco.dieCounter > 0 && Choco.upPressed))) {
       Choco.spawningIn = false;
       Choco.player.params.v += Choco.gravity;
@@ -1112,7 +1113,7 @@ Choco.updateEntities = function (dt) {
   // Move player out through finish
   if (Choco.finishing) {
     Choco.player.sprite.frames = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
-    Choco.player.sprite.once=false;
+    Choco.player.sprite.once = false;
     Choco.player.params.v = 0;
     Choco.player.pos[0] += Choco.gameSpeed;
     if (Choco.player.pos[1] != 200) {
@@ -1451,18 +1452,20 @@ Choco.loadingProgress = function (progress, count) {
 
 
 Choco.FacebookPost = function (message) {
-  FB.login(function () {
-    // Note: The call will only work if you accept the permission request
-    FB.api('/me/feed', 'post', {message: message, link: "http://hazisweets.hu/", caption: "Játssz Te is!"},
-            function (response) {
-              if (!response || response.error) {
-                alert('Hiba történt!');
-              } else {
-                alert('Sikeres postolás!');
-              }
-            }
-    );
-  }, {scope: 'publish_actions'});
+  FB.ui({
+    app_id: '982074625146679',
+    method: 'feed',
+    name: 'Choco fly',
+    link: 'http://hazisweets.hu/',
+    picture: 'http://hazisweets.hu/choco_fly/images/facebook_share.jpg',
+    caption: 'Játssz Te is!',
+    description: message
+  }, function (response) {
+    if (!response || response.error) {
+//      alert('Hiba történt!');
+    }
+  });
+
 };
 
 
@@ -1486,7 +1489,7 @@ $(document).ready(function () {
   $('#start-button').click(function () {
     Choco.switchScreen('tutorial');
   });
-  
+
   // Tutorial
   $('#tutorial').click(function () {
     Choco.switchScreen('game');
