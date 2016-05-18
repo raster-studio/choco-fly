@@ -805,7 +805,7 @@ Choco.handleInput = function (dt) {
   if (!Choco.finishing && !Choco.downBeingPressed && Choco.player.pos[1] < 520 && (Kemist.Input.isDown('DOWN') || Kemist.Input.isDown('s'))) {
 //    move_speed = Choco.playerSpeed * dt * 1.2;
 //    Choco.player.pos[1] += move_speed;
-    Choco.player.params.v += 10;
+    Choco.player.params.v += 15;
     Choco.downPressed = true;
     Choco.upPressed = false;
     Choco.playSound('swipe', 0.2);
