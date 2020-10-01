@@ -1253,7 +1253,7 @@ Choco.createSession = function (callback) {
   var password = CryptoJS.MD5('ChOcOfLy' + timeStamp.toString());
   $.ajax({
     type: 'GET',
-    url: 'http://rasterstudio.hu/api/chocofly.create_session/chocofly/' + escape(password),
+    url: 'https://rasterstudio.hu/api/chocofly.create_session/chocofly/' + escape(password),
     data: '',
     dataType: 'json',
     cache: false,
@@ -1287,7 +1287,7 @@ Choco.getHighScores = function (callback) {
   }
   $.ajax({
     type: 'GET',
-    url: 'http://rasterstudio.hu/api/chocofly.get_highscores/' + escape(Choco.sessionId),
+    url: 'https://rasterstudio.hu/api/chocofly.get_highscores/' + escape(Choco.sessionId),
     data: '',
     dataType: 'json',
     cache: false,
@@ -1330,7 +1330,7 @@ Choco.storeHighScore = function (name) {
 
   $.ajax({
     type: 'POST',
-    url: 'http://rasterstudio.hu/api/chocofly.store_highscore',
+    url: 'https://rasterstudio.hu/api/chocofly.store_highscore',
     data: 'sessionId=' + escape(Choco.sessionId) + '&platform=Desktop&name=' +
             name + '&score=' + Choco.game.score + '&level=' + Choco.game.level +
             '&occured=' + occured,
